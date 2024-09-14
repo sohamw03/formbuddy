@@ -1,12 +1,16 @@
+import styles from "@/app/page.module.css";
+import ProfileMenu from "@/components/ProfileMenu";
+import SidePanel from "@/components/SidePanel";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "FormBuddy",
-  description: "One stop solution for all your form needs.",
+  description: "One stop solution for all your form filling needs.",
 };
 
 export default function RootLayout({
@@ -15,8 +19,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <Providers themeProps={{ attribute: "class", defaultTheme: "dark", children }}>
+          <ProfileMenu />
+          <main className={styles.main}>
+            <SidePanel />
+            {children}
+          </main>
+        </Providers>
+      </body>
     </html>
   );
 }
