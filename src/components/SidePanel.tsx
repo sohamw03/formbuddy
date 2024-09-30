@@ -1,6 +1,10 @@
+"use client";
 import Link from "next/link";
+import GoogleLoginButton from "./GoogleLoginButton";
+import { useGlobal } from "@/drivers/GlobalContext";
 
 export default function SidePanel() {
+  const { user } = useGlobal();
   return (
     <aside>
       <h1>
@@ -17,6 +21,7 @@ export default function SidePanel() {
           <Link href={"/sign"}>Signatures</Link>
         </li>
       </ul>
+      {user.loggedIn === false && <GoogleLoginButton />}
     </aside>
   );
 }

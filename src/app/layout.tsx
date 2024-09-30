@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { GlobalContextProvider } from "@/drivers/GlobalContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,16 +20,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark", children }}>
-          <ProfileMenu />
-          <main className={styles.main}>
-            <SidePanel />
-            {children}
-          </main>
-        </Providers>
-      </body>
-    </html>
+    <GlobalContextProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={inter.className}>
+          <Providers themeProps={{ attribute: "class", defaultTheme: "dark", children }}>
+            <ProfileMenu />
+            <main className={styles.main}>
+              <SidePanel />
+              {children}
+            </main>
+          </Providers>
+        </body>
+      </html>
+    </GlobalContextProvider>
   );
 }

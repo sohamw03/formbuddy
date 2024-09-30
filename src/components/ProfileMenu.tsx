@@ -1,7 +1,11 @@
 "use client";
+import { useGlobal } from "@/drivers/GlobalContext";
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 
 export default function ProfileMenu() {
+  // Global context
+  const { user, logout } = useGlobal();
+
   return (
     <Dropdown>
       <DropdownTrigger style={{ position: "fixed", top: 20, right: 20 }}>
@@ -10,7 +14,7 @@ export default function ProfileMenu() {
       <DropdownMenu aria-label="Profile Actions" variant="flat">
         <DropdownItem textValue="profile" key="profile" className="h-14 gap-2">
           <p className="font-semibold">Signed in as</p>
-          <p className="font-semibold">zoey@example.com</p>
+          <p className="font-semibold">{user.loggedIn ? user.name : "zoey@xyz.com"}</p>
         </DropdownItem>
         <DropdownItem textValue="settings" key="settings">
           My Settings
@@ -30,9 +34,11 @@ export default function ProfileMenu() {
         <DropdownItem textValue="help_and_feedback" key="help_and_feedback">
           Help & Feedback
         </DropdownItem>
-        <DropdownItem textValue="logout" key="logout" color="danger">
-          Log Out
-        </DropdownItem>
+        {user.loggedIn && (
+          <DropdownItem textValue="logout" key="logout" color="danger" onClick={logout}>
+            Log Out
+          </DropdownItem>
+        )}
       </DropdownMenu>
     </Dropdown>
   );
