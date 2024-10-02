@@ -6,6 +6,7 @@ import { getDriveClient } from "./ConnectDrive";
 export interface Values {
   user: Record<string, any>;
   logout: () => void;
+  getDriveAppDataFolder: () => void;
 }
 
 const globalContext = createContext<Values>({} as Values);
@@ -20,16 +21,19 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     signOut();
     setUser(() => ({ loggedIn: false }));
   };
-  
+
   // Get drive appdata folder
   const getDriveAppDataFolder = async () => {
-    const client = await getDriveClient();
-    const res = await client.files.list({
-      q: "mimeType='application/vnd.google-apps.folder' and name='appDataFolder'",
-      fields: "files(id)",
-    });
-    return res;
-  }
+    try {
+      const response = await fetch("/api/c_drive", {
+        method: "POST",
+      });
+      const responseJson = await response.json();
+      console.log(responseJson);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // Load state from local storage on reload
   useEffect(() => {
@@ -44,12 +48,12 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       }
     };
     loadStateFromLocal();
-    getDriveAppDataFolder();
   }, []);
 
   const values: Values = {
     user,
     logout,
+    getDriveAppDataFolder,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;

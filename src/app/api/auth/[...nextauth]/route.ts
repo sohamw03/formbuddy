@@ -1,5 +1,6 @@
-import { NextAuthOptions } from "next-auth";
-import NextAuth from "next-auth/next";
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
+import { NextAuthOptions, Session } from "next-auth";
+import NextAuth, { getServerSession } from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 
 const scopes = [
@@ -9,7 +10,7 @@ const scopes = [
   "https://www.googleapis.com/auth/drive.appdata",
 ];
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET as string,
   // Providers array will be configured in the next steps
   providers: [
@@ -38,20 +39,20 @@ const authOptions: NextAuthOptions = {
     },
     jwt: async ({ token, user, account }) => {
       // console.log("jwt callback", { token, user, account, profile, trigger });
-      if (user) {
+      if (account) {
         // Add custom claims to the JWT. These will be saved in the JWT.
         token.userData = {
           name: user.name,
           email: user.email,
-          accessToken: account?.access_token,
-        } as { name: string; email: string; accessToken: string };
+          accessToken: account.accessToken,
+        };
       }
       return token;
     },
     session: async ({ session, token, user }) => {
       // console.log("session callback", { session, token });
       // Add property to session, like an access control list
-      session.user = token.userData as { name: string; email: string, accessToken: string };
+      session.user = token.userData as { name: string; email: string; accessToken: string };
       return session;
     },
   },
@@ -61,6 +62,19 @@ const authOptions: NextAuthOptions = {
   },
   // Additional configuration will be added here
 };
+
+// Use it in server contexts
+export function auth(...args: [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]] | [NextApiRequest, NextApiResponse] | []) {
+  const serverAuthOptions = { ...authOptions };
+  if (serverAuthOptions.callbacks)
+    serverAuthOptions.callbacks.session = async ({ session, token }: { session: Session; token: any }) => {
+      token.userData.accessToken = token.accessToken;
+      console.log(token);
+      session.user = token.userData as { name: string; email: string; accessToken: string };
+      return session;
+    };
+  return getServerSession(...args, authOptions);
+}
 
 const handler = NextAuth(authOptions);
 
