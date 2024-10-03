@@ -44,8 +44,8 @@ export const authOptions: NextAuthOptions = {
         token.userData = {
           name: user.name,
           email: user.email,
-          accessToken: account.accessToken,
         };
+        token.accessToken = account.access_token;
       }
       return token;
     },
@@ -69,7 +69,7 @@ export function auth(...args: [GetServerSidePropsContext["req"], GetServerSidePr
   if (serverAuthOptions.callbacks)
     serverAuthOptions.callbacks.session = async ({ session, token }: { session: Session; token: any }) => {
       token.userData.accessToken = token.accessToken;
-      console.log(token);
+      delete token.accessToken;
       session.user = token.userData as { name: string; email: string; accessToken: string };
       return session;
     };

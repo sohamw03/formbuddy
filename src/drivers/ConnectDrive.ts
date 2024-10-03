@@ -1,21 +1,21 @@
 import { google } from "googleapis";
-import { getSession } from "next-auth/react";
+import { auth } from "@/app/api/auth/[...nextauth]/route";
 
 export const getDriveClient = async () => {
-  const token = await getSession();
-  if (!token) {
+  const session = await auth();
+  if (!session) {
     return null;
   }
-  const { accessToken } = token.user as { accessToken: string };
+  const { accessToken } = session.user as { accessToken: string };
   // Create a new client instance with the access token
   const client = new google.auth.OAuth2({
     // Use the access token from Next-Auth
     credentials: { access_token: accessToken },
   });
-  const drive = google.drive({
+  const service = google.drive({
     version: "v3",
     auth: client,
   });
 
-  return drive;
+  return service;
 };
