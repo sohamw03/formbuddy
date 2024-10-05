@@ -21,13 +21,6 @@ export async function POST() {
         console.log("Found file:", file.name, file.id);
       });
       return Response.json({ files: res.data.files });
-      // const file = await service.files.create({
-      //   requestBody: fileMetadata,
-      //   media: media,
-      //   fields: "id",
-      // });
-      // console.log("File Id:", file.data.id);
-      // return Response.json({ id: file.data.id });
     } catch (err) {
       // TODO(developer) - Handle error
       throw err;

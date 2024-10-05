@@ -1,12 +1,12 @@
 "use client";
 import { getSession, signOut } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { getDriveClient } from "./ConnectDrive";
 
 export interface Values {
   user: Record<string, any>;
   logout: () => void;
-  getDriveAppDataFolder: () => void;
+  getFiles: () => void;
+  createFile: () => void;
 }
 
 const globalContext = createContext<Values>({} as Values);
@@ -22,11 +22,25 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     setUser(() => ({ loggedIn: false }));
   };
 
-  // Get drive appdata folder
-  const getDriveAppDataFolder = async () => {
+  // Get all files
+  const getFiles = async () => {
     try {
-      const response = await fetch("/api/c_drive", {
+      const response = await fetch("/api/list_files", {
         method: "POST",
+      });
+      const responseJson = await response.json();
+      console.log(responseJson);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Create file
+  const createFile = async () => {
+    try {
+      const response = await fetch("/api/create_file", {
+        method: "POST",
+        body: JSON.stringify({ name: "config.txt", content: "Hello World" }),
       });
       const responseJson = await response.json();
       console.log(responseJson);
@@ -53,7 +67,8 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   const values: Values = {
     user,
     logout,
-    getDriveAppDataFolder,
+    getFiles,
+    createFile,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
