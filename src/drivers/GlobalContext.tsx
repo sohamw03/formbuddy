@@ -5,8 +5,9 @@ import { createContext, useContext, useEffect, useState } from "react";
 export interface Values {
   user: Record<string, any>;
   logout: () => void;
-  getFiles: () => void;
+  listFiles: () => Promise<Array<{ name: string; id: string }>>;
   createFile: () => void;
+  removeFile: (id: string) => void;
 }
 
 const globalContext = createContext<Values>({} as Values);
@@ -22,16 +23,18 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     setUser(() => ({ loggedIn: false }));
   };
 
-  // Get all files
-  const getFiles = async () => {
+  // List all files
+  const listFiles = async (): Promise<Array<{ name: string; id: string }>> => {
     try {
       const response = await fetch("/api/list_files", {
         method: "POST",
       });
       const responseJson = await response.json();
       console.log(responseJson);
+      return responseJson.files;
     } catch (error) {
       console.log(error);
+      return [];
     }
   };
 
@@ -41,6 +44,20 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       const response = await fetch("/api/create_file", {
         method: "POST",
         body: JSON.stringify({ name: "config.txt", content: "Hello World" }),
+      });
+      const responseJson = await response.json();
+      console.log(responseJson);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Remove file
+  const removeFile = async (id: string) => {
+    try {
+      const response = await fetch("/api/remove_file", {
+        method: "POST",
+        body: JSON.stringify({ id: id }),
       });
       const responseJson = await response.json();
       console.log(responseJson);
@@ -67,8 +84,9 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   const values: Values = {
     user,
     logout,
-    getFiles,
+    listFiles,
     createFile,
+    removeFile,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;

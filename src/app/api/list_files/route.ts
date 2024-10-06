@@ -17,13 +17,10 @@ export async function POST() {
         fields: "nextPageToken, files(id, name)",
         pageSize: 100,
       });
-      (res.data.files as Array<object>).forEach(function (file: any) {
-        console.log("Found file:", file.name, file.id);
-      });
+      console.log(res.data.files);
       return Response.json({ files: res.data.files });
     } catch (err) {
-      // TODO(developer) - Handle error
-      throw err;
+      return Response.json({ error: err }, { status: 500 });
     }
   }
 }

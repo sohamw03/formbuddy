@@ -11,8 +11,7 @@ export async function POST(request: Request) {
       });
       return Response.json(response);
     } catch (err) {
-      // TODO(developer) - Handle error
-      throw err;
+      console.log(err);
     }
   }
 }
