@@ -1,11 +1,12 @@
 "use client";
-import { getSession, signOut } from "next-auth/react";
+import { getSession, signIn, signOut } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 
 export interface Values {
   user: Record<string, any>;
+  files: Array<{ name: string; id: string }>;
   logout: () => void;
-  listFiles: () => Promise<Array<{ name: string; id: string }>>;
+  listFiles: () => void;
   createFile: () => void;
   removeFile: (id: string) => void;
 }
@@ -15,6 +16,7 @@ const globalContext = createContext<Values>({} as Values);
 export function GlobalContextProvider({ children }: { children: React.ReactNode }) {
   // Global states
   const [user, setUser] = useState<Record<string, any>>({ loggedIn: false });
+  const [files, setFiles] = useState<Array<{ name: string; id: string }>>([]);
 
   // Auth logout
   const logout = async () => {
@@ -24,17 +26,16 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   };
 
   // List all files
-  const listFiles = async (): Promise<Array<{ name: string; id: string }>> => {
+  const listFiles = async () => {
     try {
       const response = await fetch("/api/list_files", {
         method: "POST",
       });
       const responseJson = await response.json();
       console.log(responseJson);
-      return responseJson.files;
+      setFiles(responseJson.files.map((file: any) => ({ name: file.name, id: file.id })));
     } catch (error) {
       console.log(error);
-      return [];
     }
   };
 
@@ -43,10 +44,11 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     try {
       const response = await fetch("/api/create_file", {
         method: "POST",
-        body: JSON.stringify({ name: "config.txt", content: "Hello World" }),
+        body: JSON.stringify({ name: `${new Date().toISOString().replace(/T/, " ").replace(/\..+/, "")}.txt`, content: "Hello World" }),
       });
       const responseJson = await response.json();
       console.log(responseJson);
+      listFiles();
     } catch (error) {
       console.log(error);
     }
@@ -61,6 +63,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       });
       const responseJson = await response.json();
       console.log(responseJson);
+      listFiles();
     } catch (error) {
       console.log(error);
     }
@@ -70,9 +73,19 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   useEffect(() => {
     const loadStateFromLocal = async () => {
       try {
-        const token = await getSession();
-        if (token) {
-          setUser(() => ({ ...token.user, loggedIn: true }));
+        const sessionToken = (await getSession()) as any;
+        if (sessionToken) {
+          if (sessionToken.error === "RefreshTokenError") {
+            try {
+              const result = await signIn("google", { redirect: false, callbackUrl: "/" });
+              if (result?.error) {
+                console.error(result.error);
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          }
+          setUser(() => ({ ...sessionToken.user, loggedIn: true }));
         }
       } catch (error) {
         console.log(error);
@@ -83,6 +96,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
 
   const values: Values = {
     user,
+    files,
     logout,
     listFiles,
     createFile,

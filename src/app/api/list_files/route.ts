@@ -20,7 +20,8 @@ export async function POST() {
       console.log(res.data.files);
       return Response.json({ files: res.data.files });
     } catch (err) {
-      return Response.json({ error: err }, { status: 500 });
+      console.error(err);
+      return Response.json({ error: `Error: ${err}` }, { status: 500 });
     }
   }
 }
