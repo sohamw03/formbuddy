@@ -1,0 +1,38 @@
+.main {
+  @apply p-8 ps-0;
+}
+
+.heading {
+  @apply text-large font-semibold;
+}
+
+.heading2 {
+  @apply text-medium font-medium mt-4;
+}
+
+.cardWrapper {
+  @apply gap-2 grid grid-cols-2 sm:grid-cols-4;
+  @apply border border-default-200 dark:border-default-100 rounded-2xl;
+  @apply p-2 mt-2;
+  @apply overflow-hidden;
+}
+
+.cardBody {
+  @apply overflow-visible p-0;
+}
+
+.image {
+  @apply w-full object-cover h-[140px];
+}
+
+.cardFooter {
+  @apply text-small justify-between;
+}
+
+.text {
+  @apply text-tiny text-white/80;
+}
+
+.button {
+  @apply text-tiny text-white bg-black/20;
+}

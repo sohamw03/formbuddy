@@ -14,11 +14,12 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
-"@formatjs/ecma402-abstract@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@formatjs/ecma402-abstract/-/ecma402-abstract-2.0.0.tgz#39197ab90b1c78b7342b129a56a7acdb8f512e17"
-  integrity sha512-rRqXOqdFmk7RYvj4khklyqzcfQl9vEL/usogncBHRZfZBDOwMGuSRNFl02fu5KGHXdbinju+YXyuR+Nk8xlr/g==
+"@formatjs/ecma402-abstract@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@formatjs/ecma402-abstract/-/ecma402-abstract-2.1.0.tgz#8b217216c6f696ec0e718256ad333b8796d623cb"
+  integrity sha512-SE2V2PE03K9U/YQZ3nxEOysRkQ/CfSwLHR789Uk9N0PTiWT6I+17UTDI97zYEwC1mbnjefqmtjbL8nunjPwGjw==
   dependencies:
+    "@formatjs/fast-memoize" "2.2.0"
     "@formatjs/intl-localematcher" "0.5.4"
     tslib "^2.4.0"
 
@@ -29,21 +30,21 @@
   dependencies:
     tslib "^2.4.0"
 
-"@formatjs/icu-messageformat-parser@2.7.8":
-  version "2.7.8"
-  resolved "https://registry.yarnpkg.com/@formatjs/icu-messageformat-parser/-/icu-messageformat-parser-2.7.8.tgz#f6d7643001e9bb5930d812f1f9a9856f30fa0343"
-  integrity sha512-nBZJYmhpcSX0WeJ5SDYUkZ42AgR3xiyhNCsQweFx3cz/ULJjym8bHAzWKvG5e2+1XO98dBYC0fWeeAECAVSwLA==
+"@formatjs/icu-messageformat-parser@2.7.9":
+  version "2.7.9"
+  resolved "https://registry.yarnpkg.com/@formatjs/icu-messageformat-parser/-/icu-messageformat-parser-2.7.9.tgz#cb525cf9a3fa9bfce227ed5d32aeef4e4d060156"
+  integrity sha512-9Z5buDRMsTbplXknvRlDmnpWhZrayNVcVvkH0+SSz8Ll4XD/7Tcn8m1IjxM3iBJSwQbxwxb7/g0Fkx3d4j2osw==
   dependencies:
-    "@formatjs/ecma402-abstract" "2.0.0"
-    "@formatjs/icu-skeleton-parser" "1.8.2"
+    "@formatjs/ecma402-abstract" "2.1.0"
+    "@formatjs/icu-skeleton-parser" "1.8.3"
     tslib "^2.4.0"
 
-"@formatjs/icu-skeleton-parser@1.8.2":
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-1.8.2.tgz#2252c949ae84ee66930e726130ea66731a123c9f"
-  integrity sha512-k4ERKgw7aKGWJZgTarIcNEmvyTVD9FYh0mTrrBMHZ1b8hUu6iOJ4SzsZlo3UNAvHYa+PnvntIwRPt1/vy4nA9Q==
+"@formatjs/icu-skeleton-parser@1.8.3":
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-1.8.3.tgz#d88dffd035d395f351619967905e14dd1bc20fbf"
+  integrity sha512-TsKAP013ayZFbWWR2KWy+f9QVZh0yDFTPK3yE4OqU2gnzafvmKTodRtJLVpfZmpXWJ5y7BWD1AsyT14mcbLzig==
   dependencies:
-    "@formatjs/ecma402-abstract" "2.0.0"
+    "@formatjs/ecma402-abstract" "2.1.0"
     tslib "^2.4.0"
 
 "@formatjs/intl-localematcher@0.5.4":
@@ -271,7 +272,7 @@
     "@react-types/breadcrumbs" "3.7.5"
     "@react-types/shared" "3.23.1"
 
-"@nextui-org/button@2.0.38", "@nextui-org/button@^2.0.38":
+"@nextui-org/button@2.0.38":
   version "2.0.38"
   resolved "https://registry.yarnpkg.com/@nextui-org/button/-/button-2.0.38.tgz#2756bb1d245e53bc3836d3bff3ffc6f0f03d52ac"
   integrity sha512-XbgyqBv+X7QirXeriGwkqkMOENpAxXRo+jzfMyBMvfsM3kwrFj92OSF1F7/dWDvcW7imVZB9o2Ci7LIppq9ZZQ==
@@ -315,7 +316,7 @@
     lodash.debounce "^4.0.8"
     scroll-into-view-if-needed "3.0.10"
 
-"@nextui-org/card@2.0.34", "@nextui-org/card@^2.0.34":
+"@nextui-org/card@2.0.34":
   version "2.0.34"
   resolved "https://registry.yarnpkg.com/@nextui-org/card/-/card-2.0.34.tgz#d9c7f68f84f86dcb4965a365a59e122e75e252b4"
   integrity sha512-2RYNPsQkM0FOifGCKmRBR3AuYgYCNmPV7dyA5M3D9Lf0APsHHtsXRA/GeIJ/AuPnglZrYBX8wpM5kLt3dnlQjQ==
@@ -444,7 +445,7 @@
     "@nextui-org/system" "2.2.6"
     "@nextui-org/use-measure" "2.0.2"
 
-"@nextui-org/image@2.0.32", "@nextui-org/image@^2.0.32":
+"@nextui-org/image@2.0.32":
   version "2.0.32"
   resolved "https://registry.yarnpkg.com/@nextui-org/image/-/image-2.0.32.tgz#4011ca965f691a615fcc396aaf09542ebcc47927"
   integrity sha512-JpE0O8qAeJpQA61ZnXNLH76to+dbx93PR5tTOxSvmTxtnuqVg4wl5ar/SBY3czibJPr0sj33k8Mv2EfULjoH7Q==
@@ -1253,18 +1254,7 @@
     "@swc/helpers" "^0.5.0"
     clsx "^2.0.0"
 
-"@react-aria/focus@^3.17.1":
-  version "3.18.1"
-  resolved "https://registry.yarnpkg.com/@react-aria/focus/-/focus-3.18.1.tgz#b54b88e78662549ddae917e3143723c8dd7a4e90"
-  integrity sha512-N0Cy61WCIv+57mbqC7hiZAsB+3rF5n4JKabxUmg/2RTJL6lq7hJ5N4gx75ymKxkN8GnVDwt4pKZah48Wopa5jw==
-  dependencies:
-    "@react-aria/interactions" "^3.22.1"
-    "@react-aria/utils" "^3.25.1"
-    "@react-types/shared" "^3.24.1"
-    "@swc/helpers" "^0.5.0"
-    clsx "^2.0.0"
-
-"@react-aria/focus@^3.18.3":
+"@react-aria/focus@^3.17.1", "@react-aria/focus@^3.18.3":
   version "3.18.3"
   resolved "https://registry.yarnpkg.com/@react-aria/focus/-/focus-3.18.3.tgz#4fe32de1e7530beab8da2e7b89f0f17d22a47e5e"
   integrity sha512-WKUElg+5zS0D3xlVn8MntNnkzJql2J6MuzAMP8Sv5WTgFDse/XGR842dsxPTIyKKdrWVCRegCuwa4m3n/GzgJw==
@@ -1354,17 +1344,7 @@
     "@react-types/shared" "^3.23.1"
     "@swc/helpers" "^0.5.0"
 
-"@react-aria/interactions@^3.21.3", "@react-aria/interactions@^3.22.1":
-  version "3.22.1"
-  resolved "https://registry.yarnpkg.com/@react-aria/interactions/-/interactions-3.22.1.tgz#f2219a100c886cee383da7be9ae05e9dd940d39a"
-  integrity sha512-5TLzQaDAQQ5C70yG8GInbO4wIylKY67RfTIIwQPGR/4n5OIjbUD8BOj3NuSsuZ/frUPaBXo1VEBBmSO23fxkjw==
-  dependencies:
-    "@react-aria/ssr" "^3.9.5"
-    "@react-aria/utils" "^3.25.1"
-    "@react-types/shared" "^3.24.1"
-    "@swc/helpers" "^0.5.0"
-
-"@react-aria/interactions@^3.22.3":
+"@react-aria/interactions@^3.21.3", "@react-aria/interactions@^3.22.3":
   version "3.22.3"
   resolved "https://registry.yarnpkg.com/@react-aria/interactions/-/interactions-3.22.3.tgz#3ba50db12f6ed443ae061eed79e41509eaa3d8e6"
   integrity sha512-RRUb/aG+P0IKTIWikY/SylB6bIbLZeztnZY2vbe7RAG5MgVaCgn5HQ45SI15GlTmhsFG8CnF6slJsUFJiNHpbQ==
@@ -1613,14 +1593,7 @@
   dependencies:
     "@swc/helpers" "^0.5.0"
 
-"@react-aria/ssr@^3.9.4", "@react-aria/ssr@^3.9.5":
-  version "3.9.5"
-  resolved "https://registry.yarnpkg.com/@react-aria/ssr/-/ssr-3.9.5.tgz#775d84f51f90934ff51ae74eeba3728daac1a381"
-  integrity sha512-xEwGKoysu+oXulibNUSkXf8itW0npHHTa6c4AyYeZIJyRoegeteYuFpZUBPtIDE8RfHdNsSmE1ssOkxRnwbkuQ==
-  dependencies:
-    "@swc/helpers" "^0.5.0"
-
-"@react-aria/ssr@^3.9.6":
+"@react-aria/ssr@^3.9.4", "@react-aria/ssr@^3.9.6":
   version "3.9.6"
   resolved "https://registry.yarnpkg.com/@react-aria/ssr/-/ssr-3.9.6.tgz#a9e8b351acdc8238f2b5215b0ce904636c6ea690"
   integrity sha512-iLo82l82ilMiVGy342SELjshuWottlb5+VefO3jOQqQRNYnJBFpUSadswDPbRimSgJUZuFwIEYs6AabkP038fA==
@@ -1740,18 +1713,7 @@
     "@swc/helpers" "^0.5.0"
     clsx "^2.0.0"
 
-"@react-aria/utils@^3.24.1", "@react-aria/utils@^3.25.1":
-  version "3.25.1"
-  resolved "https://registry.yarnpkg.com/@react-aria/utils/-/utils-3.25.1.tgz#f6530ce47aa28617924cc6868b4cf1c113a909c5"
-  integrity sha512-5Uj864e7T5+yj78ZfLnfHqmypLiqW2mN+nsdslog2z5ssunTqjolVeM15ootXskjISlZ7MojLpq97kIC4nlnAw==
-  dependencies:
-    "@react-aria/ssr" "^3.9.5"
-    "@react-stately/utils" "^3.10.2"
-    "@react-types/shared" "^3.24.1"
-    "@swc/helpers" "^0.5.0"
-    clsx "^2.0.0"
-
-"@react-aria/utils@^3.25.3":
+"@react-aria/utils@^3.24.1", "@react-aria/utils@^3.25.3":
   version "3.25.3"
   resolved "https://registry.yarnpkg.com/@react-aria/utils/-/utils-3.25.3.tgz#cad9bffc07b045cdc283df2cb65c18747acbf76d"
   integrity sha512-PR5H/2vaD8fSq0H/UB9inNbc8KDcVmW6fYAfSWkkn+OAdhTTMVKqXXrZuZBWyFfSD5Ze7VN6acr4hrOQm2bmrA==
@@ -2117,16 +2079,7 @@
     "@react-types/checkbox" "^3.8.1"
     "@swc/helpers" "^0.5.0"
 
-"@react-stately/toggle@^3.7.4":
-  version "3.7.6"
-  resolved "https://registry.yarnpkg.com/@react-stately/toggle/-/toggle-3.7.6.tgz#de31d74b9f9bd73350cf99ba582bc3cd79fa8c74"
-  integrity sha512-xRZyrjNVu1VCd1xpg5RwmNYs9fXb+JHChoUaRcBmGCCjsPD0R5uR3iNuE17RXJtWS3/8o9IJVn90+/7NW7boOg==
-  dependencies:
-    "@react-stately/utils" "^3.10.2"
-    "@react-types/checkbox" "^3.8.3"
-    "@swc/helpers" "^0.5.0"
-
-"@react-stately/toggle@^3.7.8":
+"@react-stately/toggle@^3.7.4", "@react-stately/toggle@^3.7.8":
   version "3.7.8"
   resolved "https://registry.yarnpkg.com/@react-stately/toggle/-/toggle-3.7.8.tgz#14bcc21a50c7196c084542aa83584db86c911d13"
   integrity sha512-ySOtkByvIY54yIu8IZ4lnvomQA0H+/mkZnd6T5fKN3tjvIzHmkUk3TAPmNInUxHX148tSW6mWwec0xvjYqEd6w==
@@ -2182,14 +2135,7 @@
   dependencies:
     "@swc/helpers" "^0.5.0"
 
-"@react-stately/utils@^3.10.1", "@react-stately/utils@^3.10.2":
-  version "3.10.2"
-  resolved "https://registry.yarnpkg.com/@react-stately/utils/-/utils-3.10.2.tgz#09377f771592ff537c901aa64178cb3a004a916f"
-  integrity sha512-fh6OTQtbeQC0ywp6LJuuKs6tKIgFvt/DlIZEcIpGho6/oZG229UnIk6TUekwxnDbumuYyan6D9EgUtEMmT8UIg==
-  dependencies:
-    "@swc/helpers" "^0.5.0"
-
-"@react-stately/utils@^3.10.4":
+"@react-stately/utils@^3.10.1", "@react-stately/utils@^3.10.4":
   version "3.10.4"
   resolved "https://registry.yarnpkg.com/@react-stately/utils/-/utils-3.10.4.tgz#310663a834b67048d305e1680ed258130092fe51"
   integrity sha512-gBEQEIMRh5f60KCm7QKQ2WfvhB2gLUr9b72sqUdIZ2EG+xuPgaIlCBeSicvjmjBvYZwOjoOEnmIkcx2GHp/HWw==
@@ -2235,19 +2181,12 @@
   dependencies:
     "@react-types/shared" "^3.23.1"
 
-"@react-types/button@^3.10.0":
+"@react-types/button@^3.10.0", "@react-types/button@^3.9.4":
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/@react-types/button/-/button-3.10.0.tgz#5044648401f9842c47a433c66180a5a520cc29af"
   integrity sha512-rAyU+N9VaHLBdZop4zasn8IDwf9I5Q1EzHUKMtzIFf5aUlMUW+K460zI/l8UESWRSWAXK9/WPSXGxfcoCEjvAA==
   dependencies:
     "@react-types/shared" "^3.25.0"
-
-"@react-types/button@^3.9.4":
-  version "3.9.6"
-  resolved "https://registry.yarnpkg.com/@react-types/button/-/button-3.9.6.tgz#135fc465a3026f2c5005725b63cf7c3525be2306"
-  integrity sha512-8lA+D5JLbNyQikf8M/cPP2cji91aVTcqjrGpDqI7sQnaLFikM8eFR6l1ZWGtZS5MCcbfooko77ha35SYplSQvw==
-  dependencies:
-    "@react-types/shared" "^3.24.1"
 
 "@react-types/calendar@3.4.6":
   version "3.4.6"
@@ -2278,13 +2217,6 @@
   integrity sha512-fvZrlQmlFNsYHZpl7GVmyYQlKdUtO5MczMSf8z3TlSiCb5Kl3ha9PsZgLhJqGuVnzB2ArIBz0eZrYa3k0PhcpA==
   dependencies:
     "@react-types/shared" "^3.25.0"
-
-"@react-types/checkbox@^3.8.3":
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/@react-types/checkbox/-/checkbox-3.8.3.tgz#331055cf283dfb01c6bbcb02355a20decab19ada"
-  integrity sha512-f4c1mnLEt0iS1NMkyZXgT3q3AgcxzDk7w6MSONOKydcnh0xG5L2oefY14DhVDLkAuQS7jThlUFwiAs+MxiO3MA==
-  dependencies:
-    "@react-types/shared" "^3.24.1"
 
 "@react-types/combobox@3.11.1":
   version "3.11.1"
@@ -2440,12 +2372,7 @@
   resolved "https://registry.yarnpkg.com/@react-types/shared/-/shared-3.23.1.tgz#2f23c81d819d0ef376df3cd4c944be4d6bce84c3"
   integrity sha512-5d+3HbFDxGZjhbMBeFHRQhexMFt4pUce3okyRtUVKbbedQFUrtXSBg9VszgF2RTeQDKDkMCIQDtz5ccP/Lk1gw==
 
-"@react-types/shared@^3.23.1", "@react-types/shared@^3.24.1":
-  version "3.24.1"
-  resolved "https://registry.yarnpkg.com/@react-types/shared/-/shared-3.24.1.tgz#fa06cb681d144fce9c515d8bd296d81440a45d25"
-  integrity sha512-AUQeGYEm/zDTN6zLzdXolDxz3Jk5dDL7f506F07U8tBwxNNI3WRdhU84G0/AaFikOZzDXhOZDr3MhQMzyE7Ydw==
-
-"@react-types/shared@^3.25.0":
+"@react-types/shared@^3.23.1", "@react-types/shared@^3.25.0":
   version "3.25.0"
   resolved "https://registry.yarnpkg.com/@react-types/shared/-/shared-3.25.0.tgz#7223baf72256e918a3c29081bb1ecc6fad4fbf58"
   integrity sha512-OZSyhzU6vTdW3eV/mz5i6hQwQUhkRs7xwY2d1aqPvTdMe0+2cY7Fwp45PAiwYLEj73i9ro2FxF9qC4DvHGSCgQ==
@@ -2538,9 +2465,9 @@
     tslib "^2.4.0"
 
 "@swc/helpers@^0.5.0":
-  version "0.5.12"
-  resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.5.12.tgz#37aaca95284019eb5d2207101249435659709f4b"
-  integrity sha512-KMZNXiGibsW9kvZAO1Pam2JPTDBm+KSHMMHWdsyI/1DbIZjT2A6Gy3hblVXUMEDvUAKq+e0vL0X0o54owWji7g==
+  version "0.5.13"
+  resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.5.13.tgz#33e63ff3cd0cade557672bd7888a39ce7d115a8c"
+  integrity sha512-UoKGxQ3r5kYI9dALKJapMmuK+1zWM/H17Z1+iwnNmzcJRnfFuevZs375TA5rW31pu4BS4NoSy1fRsexDXfWn5w==
   dependencies:
     tslib "^2.4.0"
 
@@ -2949,10 +2876,10 @@ fraction.js@^4.3.7:
   resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.3.7.tgz#06ca0085157e42fda7f9e726e79fefc4068840f7"
   integrity sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==
 
-framer-motion@^11.3.21:
-  version "11.3.21"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-11.3.21.tgz#bdf06cf3ced9f14ddf055e098c1566795f353466"
-  integrity sha512-D+hfIsvzV8eL/iycld4K+tKlg2Q2LdwnrcBEohtGw3cG1AIuNYATbT5RUqIM1ndsAk+EfGhoSGf0UaiFodc5Tw==
+framer-motion@^11.11.7:
+  version "11.11.7"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-11.11.7.tgz#3af277845ff690f6935fbcf781fa3eb4146e2321"
+  integrity sha512-89CgILOXPeG3L7ymOTGrLmf8IiKubYLUN/QkYgQuLvehAHfqgwJbLfCnhuyRI4WTds1TXkUp67A7IJrgRY/j1w==
   dependencies:
     tslib "^2.4.0"
 
@@ -3112,13 +3039,13 @@ https-proxy-agent@^7.0.1:
     debug "4"
 
 intl-messageformat@^10.1.0:
-  version "10.5.14"
-  resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-10.5.14.tgz#e5bb373f8a37b88fbe647d7b941f3ab2a37ed00a"
-  integrity sha512-IjC6sI0X7YRjjyVH9aUgdftcmZK7WXdHeil4KwbjDnRWjnVitKpAx3rr6t6di1joFp5188VqKcobOPA6mCLG/w==
+  version "10.6.0"
+  resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-10.6.0.tgz#645bd918d309ded3cc33803815a9502564af82f7"
+  integrity sha512-AYKl/DY1nl75pJU8EK681JOVL40uQTNJe3yEMXKfydDFoz+5hNrM/PqjchueSMKGKCZKBVgeexqZwy3uC2B36Q==
   dependencies:
-    "@formatjs/ecma402-abstract" "2.0.0"
+    "@formatjs/ecma402-abstract" "2.1.0"
     "@formatjs/fast-memoize" "2.2.0"
-    "@formatjs/icu-messageformat-parser" "2.7.8"
+    "@formatjs/icu-messageformat-parser" "2.7.9"
     tslib "^2.4.0"
 
 invariant@^2.2.4:

@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <GlobalContextProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" className="dark" suppressHydrationWarning>
         <body className={inter.className}>
           <Providers themeProps={{ attribute: "class", defaultTheme: "dark", children }}>
             <ProfileMenu />
