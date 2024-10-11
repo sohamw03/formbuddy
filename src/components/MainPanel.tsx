@@ -27,6 +27,7 @@ export default function MainPanel(props: any) {
             <CardBody className={styles.cardBody}>
               <Image shadow="sm" radius="lg" width="100%" alt={""} className={styles.image} src={"https://placehold.co/600x400"} />
             </CardBody>
+            
             <CardFooter className={styles.cardFooter}>
               <b>{file.name}</b>
             </CardFooter>
