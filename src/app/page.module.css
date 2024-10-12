@@ -2,5 +2,6 @@
   display: grid;
   grid-template-rows: 100vh;
   grid-template-rows: 100svh;
-  grid-template-columns: 16rem 1fr;
+  grid-template-columns: 12vw auto 1fr;
+  column-gap: 1.25rem;
 }

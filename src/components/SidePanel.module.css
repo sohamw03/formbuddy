@@ -1,0 +1,21 @@
+.main {
+  @apply py-8 ps-5;
+  @apply flex flex-col;
+}
+
+.heading {
+  @apply text-large font-semibold;
+}
+
+.navWrapper {
+  @apply mt-4;
+  @apply flex flex-col gap-y-2;
+}
+
+.gdriveWrapper {
+  @apply mt-auto;
+}
+
+.button {
+  @apply w-full rounded-md;
+}

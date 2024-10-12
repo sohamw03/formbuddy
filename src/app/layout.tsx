@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { GlobalContextProvider } from "@/drivers/GlobalContext";
+import { Divider } from "@nextui-org/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
             <ProfileMenu />
             <main className={styles.main}>
               <SidePanel />
+              <Divider orientation="vertical" />
               {children}
             </main>
           </Providers>
