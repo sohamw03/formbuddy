@@ -7,16 +7,14 @@ import Carousel from "./MainPanel/Carousel";
 
 export default function MainPanel(props: { page: string }) {
   // Global States
-  const { listFiles, createFile, removeFile, user, files } = useGlobal();
+  const { user, files, initUserDirective, createFile } = useGlobal();
   // Props
   const { page } = props;
 
-  const fetchFiles = async () => {
-    listFiles();
-  };
   useEffect(() => {
     if (user.loggedIn === true) {
-      fetchFiles();
+      // Check and maintain directory structure
+      initUserDirective();
     }
   }, [user]);
 
@@ -24,6 +22,7 @@ export default function MainPanel(props: { page: string }) {
     case "home":
       return (
         <div className={styles.main}>
+          <button onClick={createFile}>CreateFile</button>
           <h1 className={styles.heading}>Recents</h1>
           <Carousel title="Photos" />
           <Carousel title="Docs" />

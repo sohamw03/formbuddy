@@ -17,8 +17,12 @@
   @apply overflow-hidden;
 }
 
+.card {
+  @apply w-full;
+}
+
 .cardBody {
-  @apply overflow-visible p-0;
+  @apply overflow-visible p-0 relative;
 }
 
 .image {
@@ -35,4 +39,9 @@
 
 .button {
   @apply text-tiny text-white bg-black/20;
+}
+
+/* Temp */
+.dropDownBtn {
+  @apply absolute top-1 right-1 rounded-md text-2xl;
 }

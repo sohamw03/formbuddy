@@ -1,3 +1,4 @@
+// Residence: Backend
 import { google } from "googleapis";
 import { auth } from "@/app/api/auth/[...nextauth]/route";
 

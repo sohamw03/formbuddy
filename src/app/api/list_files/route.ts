@@ -1,27 +1,28 @@
 import { getDriveClient } from "@/drivers/ConnectDrive";
 
-export async function POST() {
+export async function POST(request: Request) {
+  try {
+    const files = await listFiles();
+    return Response.json({ status: true, files: files });
+  } catch (error) {
+    console.log(error);
+    return Response.json({ status: false, message: "Error listing files" }, { status: 500 });
+  }
+}
+
+export async function listFiles() {
   const service = await getDriveClient();
   if (service) {
-    const fileMetadata = {
-      name: "config.json",
-      parents: ["appDataFolder"],
-    };
-    const media = {
-      mimeType: "application/json",
-      body: "Hello World",
-    };
     try {
       const res = await service.files.list({
         spaces: "appDataFolder",
-        fields: "nextPageToken, files(id, name)",
+        fields: "nextPageToken, files(id, name, mimeType)",
         pageSize: 100,
       });
       console.log(res.data.files);
-      return Response.json({ files: res.data.files });
-    } catch (err) {
-      console.error(err);
-      return Response.json({ error: `Error: ${err}` }, { status: 500 });
+      return res.data.files;
+    } catch (error) {
+      throw error;
     }
   }
 }

@@ -1,3 +1,4 @@
+// Residence: Frontend
 "use client";
 import { getSession, signIn, signOut } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -9,6 +10,7 @@ export interface Values {
   listFiles: () => void;
   createFile: () => void;
   removeFile: (id: string) => void;
+  initUserDirective: () => void;
 }
 
 const globalContext = createContext<Values>({} as Values);
@@ -16,13 +18,30 @@ const globalContext = createContext<Values>({} as Values);
 export function GlobalContextProvider({ children }: { children: React.ReactNode }) {
   // Global states
   const [user, setUser] = useState<Record<string, any>>({ loggedIn: false });
-  const [files, setFiles] = useState<Array<{ name: string; id: string }>>([]);
+  const [files, setFiles] = useState<Array<{ name: string; id: string; mimeType: string }>>([]);
 
   // Auth logout
   const logout = async () => {
     // Sign out from next-auth
     signOut();
     setUser(() => ({ loggedIn: false }));
+  };
+
+  // Maintain directory structure
+  const initUserDirective = async () => {
+    setTimeout(async () => {
+      try {
+        const response = await fetch("/api/init_user", { method: "POST" });
+        const responseJson = await response.json();
+        console.log(responseJson);
+
+        setTimeout(async () => {
+          await listFiles();
+        }, 2000);
+      } catch (error) {
+        console.log(error);
+      }
+    }, 2000);
   };
 
   // List all files
@@ -33,7 +52,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       });
       const responseJson = await response.json();
       console.log(responseJson);
-      setFiles(responseJson.files.map((file: any) => ({ name: file.name, id: file.id })));
+      setFiles(responseJson.files.map((file: any) => ({ name: file.name, id: file.id, mimeType: file.mimeType })));
     } catch (error) {
       console.log(error);
     }
@@ -101,6 +120,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     listFiles,
     createFile,
     removeFile,
+    initUserDirective,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
