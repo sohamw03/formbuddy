@@ -8,14 +8,14 @@
 }
 
 .navWrapper {
-  @apply mt-4;
+  @apply mt-6;
   @apply flex flex-col gap-y-2;
 }
 
 .gdriveWrapper {
-  @apply mt-auto;
+  @apply mt-auto mx-auto w-full;
 }
 
 .button {
-  @apply w-full rounded-md;
+  @apply w-full rounded-md justify-start ps-8;
 }

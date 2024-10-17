@@ -5,7 +5,7 @@ import { removeFile } from "../remove_file/route";
 export async function POST(request: Request) {
   try {
     // Call the list api to check if folders exist (photos, docs, and signatures)
-    const files = (await listFiles()) as { id: string; name: string; mimeType: string }[];
+    const files = (await listFiles("")) as { id: string; name: string; mimeType: string }[];
 
     // Check if the folders exist
     const folderCheck = { photos: 0, docs: 0, signatures: 0 };

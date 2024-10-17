@@ -7,10 +7,10 @@ export interface Values {
   user: Record<string, any>;
   files: Array<{ name: string; id: string }>;
   logout: () => void;
-  listFiles: () => void;
-  createFile: () => void;
-  removeFile: (id: string) => void;
-  initUserDirective: () => void;
+  listFiles: (folder: string) => void;
+  createFile: (folder: string) => void;
+  removeFile: (id: string, folder: string) => void;
+  initUserDirective: (folder: string) => void;
 }
 
 const globalContext = createContext<Values>({} as Values);
@@ -28,7 +28,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   };
 
   // Maintain directory structure
-  const initUserDirective = async () => {
+  const initUserDirective = async (folder: string) => {
     setTimeout(async () => {
       try {
         const response = await fetch("/api/init_user", { method: "POST" });
@@ -36,7 +36,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
         console.log(responseJson);
 
         setTimeout(async () => {
-          await listFiles();
+          await listFiles(folder);
         }, 2000);
       } catch (error) {
         console.log(error);
@@ -45,10 +45,11 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   };
 
   // List all files
-  const listFiles = async () => {
+  const listFiles = async (folder: string) => {
     try {
       const response = await fetch("/api/list_files", {
         method: "POST",
+        body: JSON.stringify({ folder: folder }),
       });
       const responseJson = await response.json();
       console.log(responseJson);
@@ -59,7 +60,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   };
 
   // Create file
-  const createFile = async () => {
+  const createFile = async (folder: string) => {
     try {
       const response = await fetch("/api/create_file", {
         method: "POST",
@@ -67,14 +68,14 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       });
       const responseJson = await response.json();
       console.log(responseJson);
-      listFiles();
+      listFiles(folder);
     } catch (error) {
       console.log(error);
     }
   };
 
   // Remove file
-  const removeFile = async (id: string) => {
+  const removeFile = async (id: string, folder: string) => {
     try {
       const response = await fetch("/api/remove_file", {
         method: "POST",
@@ -82,7 +83,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       });
       const responseJson = await response.json();
       console.log(responseJson);
-      listFiles();
+      listFiles(folder);
     } catch (error) {
       console.log(error);
     }

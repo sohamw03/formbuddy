@@ -2,14 +2,14 @@ import { useGlobal } from "@/drivers/GlobalContext";
 import styles from "../MainPanel.module.css";
 import { Button, Card, CardBody, CardFooter, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image } from "@nextui-org/react";
 
-export default function Carousel(props: { title: string }) {
+export default function Carousel(props: { title: string; folder: string }) {
   // Global States
   const { files, removeFile } = useGlobal();
   // Props
-  const { title } = props;
+  const { title, folder } = props;
   return (
     <>
-      <h2 className={styles.heading2}>{title}</h2>
+      {title !== "" && <h2 className={styles.heading2}>{title}</h2>}
       <div className={styles.cardWrapper}>
         {files.map((file) => (
           <div key={file.id} className="relative">
@@ -31,7 +31,7 @@ export default function Carousel(props: { title: string }) {
                 aria-label="Action event example"
                 onAction={(key) => {
                   if (key === "delete") {
-                    removeFile(file.id);
+                    removeFile(file.id, folder);
                   }
                 }}>
                 <DropdownItem key="delete" className="text-danger" color="danger">

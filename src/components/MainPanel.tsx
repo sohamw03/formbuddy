@@ -4,6 +4,14 @@ import { useGlobal } from "@/drivers/GlobalContext";
 import { useEffect } from "react";
 import styles from "./MainPanel.module.css";
 import Carousel from "./MainPanel/Carousel";
+import { Spacer } from "@nextui-org/react";
+
+const folderMap: Record<string, string> = {
+  home: "",
+  photos: "photos",
+  docs: "docs",
+  sign: "signature",
+};
 
 export default function MainPanel(props: { page: string }) {
   // Global States
@@ -14,7 +22,7 @@ export default function MainPanel(props: { page: string }) {
   useEffect(() => {
     if (user.loggedIn === true) {
       // Check and maintain directory structure
-      initUserDirective();
+      initUserDirective(folderMap[page]);
     }
   }, [user]);
 
@@ -22,18 +30,36 @@ export default function MainPanel(props: { page: string }) {
     case "home":
       return (
         <div className={styles.main}>
-          <button onClick={createFile}>CreateFile</button>
+          <button onClick={() => createFile(folderMap[page])}>CreateFile</button>
           <h1 className={styles.heading}>Recents</h1>
-          <Carousel title="Photos" />
-          <Carousel title="Docs" />
-          <Carousel title="Signatures" />
+          <Carousel title="Photos" folder={folderMap[page]} />
+          <Carousel title="Docs" folder={folderMap[page]} />
+          <Carousel title="Signatures" folder={folderMap[page]} />
         </div>
       );
     case "photos":
-      return;
+      return (
+        <div className={styles.main}>
+          <h1 className={styles.heading}>Photos</h1>
+          <Spacer y={4} />
+          <Carousel title="" folder={folderMap[page]} />
+        </div>
+      );
     case "docs":
-      return;
+      return (
+        <div className={styles.main}>
+          <h1 className={styles.heading}>Docs</h1>
+          <Spacer y={4} />
+          <Carousel title="" folder={folderMap[page]} />
+        </div>
+      );
     case "sign":
-      return;
+      return (
+        <div className={styles.main}>
+          <h1 className={styles.heading}>Signatures</h1>
+          <Spacer y={4} />
+          <Carousel title="" folder={folderMap[page]} />
+        </div>
+      );
   }
 }
