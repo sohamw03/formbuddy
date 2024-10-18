@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 export interface Values {
   user: Record<string, any>;
-  files: Array<{ name: string; id: string }>;
+  files: Array<{ name: string; id: string; mimeType: string; parents: string[] }>;
   logout: () => void;
   listFiles: (folder: string) => void;
   createFile: (folder: string) => void;
@@ -18,7 +18,7 @@ const globalContext = createContext<Values>({} as Values);
 export function GlobalContextProvider({ children }: { children: React.ReactNode }) {
   // Global states
   const [user, setUser] = useState<Record<string, any>>({ loggedIn: false });
-  const [files, setFiles] = useState<Array<{ name: string; id: string; mimeType: string }>>([]);
+  const [files, setFiles] = useState<Array<{ name: string; id: string; mimeType: string; parents: string[] }>>([]);
 
   // Auth logout
   const logout = async () => {
@@ -37,11 +37,11 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
 
         setTimeout(async () => {
           await listFiles(folder);
-        }, 2000);
+        }, 1000);
       } catch (error) {
         console.log(error);
       }
-    }, 2000);
+    }, 1000);
   };
 
   // List all files
@@ -53,7 +53,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       });
       const responseJson = await response.json();
       console.log(responseJson);
-      setFiles(responseJson.files.map((file: any) => ({ name: file.name, id: file.id, mimeType: file.mimeType })));
+      setFiles(responseJson.files.map((file: any) => ({ name: file.name, id: file.id, mimeType: file.mimeType, parents: file.parents })));
     } catch (error) {
       console.log(error);
     }
@@ -64,7 +64,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     try {
       const response = await fetch("/api/create_file", {
         method: "POST",
-        body: JSON.stringify({ name: `${new Date().toISOString().replace(/T/, " ").replace(/\..+/, "")}.txt`, content: "Hello World" }),
+        body: JSON.stringify({ name: `${new Date().toISOString().replace(/T/, " ").replace(/\..+/, "")}.txt`, content: "Hello World", folder_id: files.find((file) => file.name === folder && file.mimeType === "application/vnd.google-apps.folder")?.id }),
       });
       const responseJson = await response.json();
       console.log(responseJson);

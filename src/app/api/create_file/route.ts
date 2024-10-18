@@ -2,12 +2,12 @@ import { getDriveClient } from "@/drivers/ConnectDrive";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { name, content } = body;
+  const { name, content, folder_id } = body;
   const service = await getDriveClient();
   if (service) {
     const fileMetadata = {
       name: name,
-      parents: ["appDataFolder"],
+      parents: [folder_id],
     };
     const media = {
       body: content,

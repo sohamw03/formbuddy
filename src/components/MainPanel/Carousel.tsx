@@ -7,11 +7,15 @@ export default function Carousel(props: { title: string; folder: string }) {
   const { files, removeFile } = useGlobal();
   // Props
   const { title, folder } = props;
+
+  // Decide which files to show based on the folder
+  const folderData = files.find((file) => file.name === folder);
+  const filesToShow = files.filter((file) => folderData?.id === file.parents[0]);
   return (
     <>
       {title !== "" && <h2 className={styles.heading2}>{title}</h2>}
       <div className={styles.cardWrapper}>
-        {files.map((file) => (
+        {filesToShow.map((file) => (
           <div key={file.id} className="relative">
             <Card shadow="sm" isPressable onPress={() => console.log("item pressed")} contextMenu="true" className={styles.card}>
               <CardBody className={styles.cardBody}>

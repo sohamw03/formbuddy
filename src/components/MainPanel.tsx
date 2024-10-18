@@ -10,7 +10,7 @@ const folderMap: Record<string, string> = {
   home: "",
   photos: "photos",
   docs: "docs",
-  sign: "signature",
+  sign: "signatures",
 };
 
 export default function MainPanel(props: { page: string }) {
@@ -32,9 +32,9 @@ export default function MainPanel(props: { page: string }) {
         <div className={styles.main}>
           <button onClick={() => createFile(folderMap[page])}>CreateFile</button>
           <h1 className={styles.heading}>Recents</h1>
-          <Carousel title="Photos" folder={folderMap[page]} />
-          <Carousel title="Docs" folder={folderMap[page]} />
-          <Carousel title="Signatures" folder={folderMap[page]} />
+          <Carousel title="Photos" folder={"photos"} />
+          <Carousel title="Docs" folder={"docs"} />
+          <Carousel title="Signatures" folder={"signatures"} />
         </div>
       );
     case "photos":
