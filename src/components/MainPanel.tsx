@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import styles from "./MainPanel.module.css";
 import Carousel from "./MainPanel/Carousel";
 import { Spacer } from "@nextui-org/react";
+import Upload from "./Upload";
 
 const folderMap: Record<string, string> = {
   home: "",
@@ -30,7 +31,6 @@ export default function MainPanel(props: { page: string }) {
     case "home":
       return (
         <div className={styles.main}>
-          <button onClick={() => createFile(folderMap[page])}>CreateFile</button>
           <h1 className={styles.heading}>Recents</h1>
           <Carousel title="Photos" folder={"photos"} />
           <Carousel title="Docs" folder={"docs"} />
@@ -40,6 +40,7 @@ export default function MainPanel(props: { page: string }) {
     case "photos":
       return (
         <div className={styles.main}>
+          <Upload page={folderMap[page]} />
           <h1 className={styles.heading}>Photos</h1>
           <Spacer y={4} />
           <Carousel title="" folder={folderMap[page]} />
@@ -48,6 +49,7 @@ export default function MainPanel(props: { page: string }) {
     case "docs":
       return (
         <div className={styles.main}>
+          <Upload page={folderMap[page]} />
           <h1 className={styles.heading}>Docs</h1>
           <Spacer y={4} />
           <Carousel title="" folder={folderMap[page]} />
@@ -56,6 +58,7 @@ export default function MainPanel(props: { page: string }) {
     case "sign":
       return (
         <div className={styles.main}>
+          <Upload page={folderMap[page]} />
           <h1 className={styles.heading}>Signatures</h1>
           <Spacer y={4} />
           <Carousel title="" folder={folderMap[page]} />

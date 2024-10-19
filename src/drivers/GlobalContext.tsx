@@ -5,10 +5,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 export interface Values {
   user: Record<string, any>;
-  files: Array<{ name: string; id: string; mimeType: string; parents: string[] }>;
+  files: Array<{ name: string; id: string; mimeType: string; parents: string[], thumbnailLink: string }>;
   logout: () => void;
-  listFiles: (folder: string) => void;
-  createFile: (folder: string) => void;
+  listFiles: () => void;
+  createFile: (file: File, folder: string) => void;
   removeFile: (id: string, folder: string) => void;
   initUserDirective: (folder: string) => void;
 }
@@ -18,7 +18,7 @@ const globalContext = createContext<Values>({} as Values);
 export function GlobalContextProvider({ children }: { children: React.ReactNode }) {
   // Global states
   const [user, setUser] = useState<Record<string, any>>({ loggedIn: false });
-  const [files, setFiles] = useState<Array<{ name: string; id: string; mimeType: string; parents: string[] }>>([]);
+  const [files, setFiles] = useState<Array<{ name: string; id: string; mimeType: string; parents: string[], thumbnailLink: string }>>([]);
 
   // Auth logout
   const logout = async () => {
@@ -36,7 +36,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
         console.log(responseJson);
 
         setTimeout(async () => {
-          await listFiles(folder);
+          await listFiles();
         }, 1000);
       } catch (error) {
         console.log(error);
@@ -45,30 +45,41 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   };
 
   // List all files
-  const listFiles = async (folder: string) => {
+  const listFiles = async () => {
     try {
       const response = await fetch("/api/list_files", {
         method: "POST",
-        body: JSON.stringify({ folder: folder }),
       });
       const responseJson = await response.json();
       console.log(responseJson);
-      setFiles(responseJson.files.map((file: any) => ({ name: file.name, id: file.id, mimeType: file.mimeType, parents: file.parents })));
+      setFiles(
+        responseJson.files.map((file: any) => ({
+          name: file.name,
+          id: file.id,
+          mimeType: file.mimeType,
+          parents: file.parents,
+          thumbnailLink: file.thumbnailLink,
+        }))
+      );
     } catch (error) {
       console.log(error);
     }
   };
 
   // Create file
-  const createFile = async (folder: string) => {
+  const createFile = async (file: File, folder: string) => {
     try {
+      const payload = new FormData();
+      payload.append("name", file.name);
+      payload.append("content", file);
+      payload.append("folder_id", `${files.find((file) => file.name === folder && file.mimeType === "application/vnd.google-apps.folder")?.id}`);
       const response = await fetch("/api/create_file", {
         method: "POST",
-        body: JSON.stringify({ name: `${new Date().toISOString().replace(/T/, " ").replace(/\..+/, "")}.txt`, content: "Hello World", folder_id: files.find((file) => file.name === folder && file.mimeType === "application/vnd.google-apps.folder")?.id }),
+        body: payload,
       });
       const responseJson = await response.json();
       console.log(responseJson);
-      listFiles(folder);
+      listFiles();
     } catch (error) {
       console.log(error);
     }
@@ -83,7 +94,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       });
       const responseJson = await response.json();
       console.log(responseJson);
-      listFiles(folder);
+      listFiles();
     } catch (error) {
       console.log(error);
     }

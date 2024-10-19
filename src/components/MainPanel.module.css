@@ -26,7 +26,7 @@
 }
 
 .image {
-  @apply w-full object-cover h-[140px];
+  @apply w-full object-contain h-[140px];
 }
 
 .cardFooter {

@@ -19,7 +19,7 @@ export default function Carousel(props: { title: string; folder: string }) {
           <div key={file.id} className="relative">
             <Card shadow="sm" isPressable onPress={() => console.log("item pressed")} contextMenu="true" className={styles.card}>
               <CardBody className={styles.cardBody}>
-                <Image shadow="sm" radius="lg" width="100%" alt={""} className={styles.image} src={"https://placehold.co/600x400"} />
+                <Image shadow="sm" radius="lg" width="100%" alt={file.name} className={styles.image} src={file.thumbnailLink} />
               </CardBody>
               <CardFooter className={styles.cardFooter}>
                 <b>{file.name}</b>
