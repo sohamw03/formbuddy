@@ -43,5 +43,5 @@
 
 /* Temp */
 .dropDownBtn {
-  @apply absolute top-1 right-1 rounded-md text-2xl;
+  @apply absolute top-1 right-1 rounded-md text-[1.8rem] px-2 m-0 w-3 min-w-min;
 }
