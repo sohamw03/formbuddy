@@ -25,7 +25,7 @@ module.exports = {
           large: "1.75rem",
         },
         radius: {
-          small: "8px",
+          small: "4px",
           medium: "12px",
           large: "0.5rem",
         },

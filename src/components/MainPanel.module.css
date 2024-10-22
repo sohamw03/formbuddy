@@ -41,7 +41,24 @@
   @apply text-tiny text-white bg-black/20;
 }
 
-/* Temp */
+.uploadBtn {
+  @apply relative;
+  @apply absolute bottom-8 right-8;
+  @apply w-10 h-10 p-7 overflow-hidden min-w-[unset];
+}
+.uploadBtn label {
+  @apply absolute top-0 left-0 w-full h-full;
+  @apply flex items-center justify-center w-full h-full;
+  @apply p-0 m-0 overflow-hidden;
+  @apply cursor-pointer;
+}
+.uploadBtn input[type="file"] {
+  @apply hidden;
+}
+
 .dropDownBtn {
-  @apply absolute top-1 right-1 rounded-md text-[1.8rem] px-2 m-0 w-3 min-w-min;
+  @apply absolute top-1 right-1 rounded-md p-0 m-0 w-6 min-w-min;
+}
+.dropDownBtn img {
+  @apply w-full h-full max-w-[unset];
 }

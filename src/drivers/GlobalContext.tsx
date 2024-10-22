@@ -5,12 +5,12 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 export interface Values {
   user: Record<string, any>;
-  files: Array<{ name: string; id: string; mimeType: string; parents: string[], thumbnailLink: string }>;
+  files: Array<{ name: string; id: string; mimeType: string; parents: string[]; thumbnailLink: string }>;
   logout: () => void;
   listFiles: () => void;
   createFile: (file: File, folder: string) => void;
   removeFile: (id: string, folder: string) => void;
-  initUserDirective: (folder: string) => void;
+  initUserDirective: (doListFiles: boolean) => void;
 }
 
 const globalContext = createContext<Values>({} as Values);
@@ -18,26 +18,28 @@ const globalContext = createContext<Values>({} as Values);
 export function GlobalContextProvider({ children }: { children: React.ReactNode }) {
   // Global states
   const [user, setUser] = useState<Record<string, any>>({ loggedIn: false });
-  const [files, setFiles] = useState<Array<{ name: string; id: string; mimeType: string; parents: string[], thumbnailLink: string }>>([]);
+  const [files, setFiles] = useState<Array<{ name: string; id: string; mimeType: string; parents: string[]; thumbnailLink: string }>>([]);
 
   // Auth logout
   const logout = async () => {
     // Sign out from next-auth
     signOut();
     setUser(() => ({ loggedIn: false }));
+    setFiles([]);
   };
 
   // Maintain directory structure
-  const initUserDirective = async (folder: string) => {
+  const initUserDirective = async (doListFiles: boolean) => {
     setTimeout(async () => {
       try {
         const response = await fetch("/api/init_user", { method: "POST" });
         const responseJson = await response.json();
         console.log(responseJson);
 
-        setTimeout(async () => {
-          await listFiles();
-        }, 1000);
+        if (doListFiles)
+          setTimeout(async () => {
+            await listFiles();
+          }, 1000);
       } catch (error) {
         console.log(error);
       }

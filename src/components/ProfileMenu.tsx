@@ -14,7 +14,7 @@ export default function ProfileMenu() {
       <DropdownMenu aria-label="Profile Actions" variant="flat">
         <DropdownItem textValue="profile" key="profile" className="h-14 gap-2">
           <p className="font-semibold">Signed in as</p>
-          <p className="font-semibold">{user.loggedIn ? user.name : "zoey@xyz.com"}</p>
+          <p className="font-semibold">{user.loggedIn ? user.name.split(" ")[0] : "zoey@xyz.com"}</p>
         </DropdownItem>
         <DropdownItem textValue="settings" key="settings">
           My Settings

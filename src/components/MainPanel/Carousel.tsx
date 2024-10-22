@@ -22,17 +22,19 @@ export default function Carousel(props: { title: string; folder: string }) {
                 <Image shadow="sm" radius="lg" width="100%" alt={file.name} className={styles.image} src={file.thumbnailLink} />
               </CardBody>
               <CardFooter className={styles.cardFooter}>
-                <b>{file.name}</b>
+                <abbr title={file.name} className="whitespace-nowrap overflow-hidden no-underline">
+                  <b>{file.name}</b>
+                </abbr>
               </CardFooter>
             </Card>
-            <Dropdown>
+            <Dropdown placement="bottom-start">
               <DropdownTrigger>
-                <Button variant="flat" className={styles.dropDownBtn}>
-                  ⋮
+                <Button variant="shadow" className={styles.dropDownBtn}>
+                  <img src="/icons/more_vert.svg" alt="more_vert" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
-                aria-label="Action event example"
+                aria-label="Dropdown menu"
                 onAction={(key) => {
                   if (key === "delete") {
                     removeFile(file.id, folder);

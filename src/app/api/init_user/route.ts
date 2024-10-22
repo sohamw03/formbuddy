@@ -5,7 +5,7 @@ import { removeFile } from "../remove_file/route";
 export async function POST(request: Request) {
   try {
     // Call the list api to check if folders exist (photos, docs, and signatures)
-    let files = (await listFiles("")) as { id: string; name: string; mimeType: string; parents: string[] }[];
+    let files = (await listFiles()) as { id: string; name: string; mimeType: string; parents: string[] }[];
 
     // Check if the folders exist
     const folderCheck = { photos: 0, docs: 0, signatures: 0 };
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
 
     // Again list all files to get the id of appDataFolder to delete files in root
     // Call the list api to check if folders exist (photos, docs, and signatures)
-    files = (await listFiles("")) as { id: string; name: string; mimeType: string; parents: string[] }[];
+    files = (await listFiles()) as { id: string; name: string; mimeType: string; parents: string[] }[];
     const appDataFolderId = files.find((file) => file.name === "photos")?.parents[0];
     // Mark files for deletion
     if (files.filter((file) => ["photos", "docs", "signatures"].includes(file.name)).every((file) => file.parents[0] === appDataFolderId))

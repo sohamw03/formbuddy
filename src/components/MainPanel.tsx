@@ -16,14 +16,15 @@ const folderMap: Record<string, string> = {
 
 export default function MainPanel(props: { page: string }) {
   // Global States
-  const { user, files, initUserDirective, createFile } = useGlobal();
+  const { user, files, initUserDirective, createFile, listFiles } = useGlobal();
   // Props
   const { page } = props;
 
   useEffect(() => {
     if (user.loggedIn === true) {
-      // Check and maintain directory structure
-      initUserDirective(folderMap[page]);
+      // Check and maintain directory structure; List files if home page
+      if (page === "home") initUserDirective(true);
+      else listFiles();
     }
   }, [user]);
 
