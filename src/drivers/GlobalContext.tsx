@@ -7,6 +7,7 @@ export interface Values {
   user: Record<string, any>;
   files: Array<{ name: string; id: string; mimeType: string; parents: string[]; thumbnailLink: string }>;
   logout: () => void;
+  login: () => void;
   listFiles: () => void;
   createFile: (file: File, folder: string) => void;
   removeFile: (id: string, folder: string) => void;
@@ -26,6 +27,18 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     signOut();
     setUser(() => ({ loggedIn: false }));
     setFiles([]);
+  };
+
+  // Auth login
+  const login = async () => {
+    try {
+      const result = await signIn("google", { redirect: false, callbackUrl: "/" });
+      if (result?.error) {
+        console.error(result.error);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // Maintain directory structure
@@ -108,16 +121,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       try {
         const sessionToken = (await getSession()) as any;
         if (sessionToken) {
-          if (sessionToken.error === "RefreshTokenError") {
-            try {
-              const result = await signIn("google", { redirect: false, callbackUrl: "/" });
-              if (result?.error) {
-                console.error(result.error);
-              }
-            } catch (error) {
-              console.error(error);
-            }
-          }
+          if (sessionToken.error === "RefreshTokenError") login();
           setUser(() => ({ ...sessionToken.user, loggedIn: true }));
         }
       } catch (error) {
@@ -131,6 +135,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     user,
     files,
     logout,
+    login,
     listFiles,
     createFile,
     removeFile,

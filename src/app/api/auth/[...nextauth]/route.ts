@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
 
       return false;
     },
-    jwt: async ({ token, user, account }) => {
+    jwt: async ({ token, user, account, profile }) => {
       // console.log("jwt callback", { token, user, account, profile, trigger });
       if (account) {
         token.accessToken = account.access_token;
@@ -91,6 +91,7 @@ export const authOptions: NextAuthOptions = {
         token.userData = {
           name: user.name,
           email: user.email,
+          image: user.image,
         };
       }
       return token;
@@ -98,7 +99,7 @@ export const authOptions: NextAuthOptions = {
     session: async ({ session, token }: { session: Session; token: any }) => {
       // console.log("session callback", { session, token });
       // Add property to session, like an access control list
-      session.user = token.userData as { name: string; email: string; accessToken: string };
+      session.user = token.userData as { name: string; email: string; accessToken: string; image: string };
       session.error = token.error;
       return session;
     },

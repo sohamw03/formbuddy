@@ -1,24 +1,15 @@
 "use client";
-import { signIn } from "next-auth/react";
+import { useGlobal } from "@/drivers/GlobalContext";
 import { useRouter } from "next/navigation";
 import styles from "./GoogleLoginButton.module.css";
 
 export default function GoogleLoginButton() {
+  // Global context
+  const { login } = useGlobal();
   const router = useRouter();
 
   return (
-    <button
-      className={styles["gsi-material-button"]}
-      onClick={async () => {
-        try {
-          const result = await signIn("google", { redirect: false, callbackUrl: "/" });
-          if (result?.error) {
-            console.error(result.error);
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      }}>
+    <button className={styles["gsi-material-button"]} onClick={login}>
       <div className={styles["gsi-material-button-state"]}></div>
       <div className={styles["gsi-material-button-content-wrapper"]}>
         <div className={styles["gsi-material-button-icon"]}>

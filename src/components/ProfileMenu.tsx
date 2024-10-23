@@ -4,18 +4,22 @@ import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@
 
 export default function ProfileMenu() {
   // Global context
-  const { user, logout } = useGlobal();
+  const { user, logout, login } = useGlobal();
 
   return (
     <Dropdown>
-      <DropdownTrigger style={{ position: "fixed", top: "2rem", right: "2rem" }}>
-        <Avatar isBordered as="button" className="transition-transform" color="secondary" name="Jason Hughes" size="sm" src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-      </DropdownTrigger>
+      <DropdownTrigger style={{ position: "fixed", top: "2rem", right: "2rem" }}>{user.loggedIn ? <Avatar isBordered as="button" className="transition-transform" color="default" size="md" src={user.image} imgProps={{ style: { filter: "brightness(95%)", width: 48, height: 48 } }} /> : <Avatar isBordered as="button" className="transition-transform" color="default" size="md" src="/icons/person_icon.svg" imgProps={{ style: { filter: "brightness(95%)", width: 48, height: 48 } }} />}</DropdownTrigger>
       <DropdownMenu aria-label="Profile Actions" variant="flat">
-        <DropdownItem textValue="profile" key="profile" className="h-14 gap-2">
-          <p className="font-semibold">Signed in as</p>
-          <p className="font-semibold">{user.loggedIn ? user.name.split(" ")[0] : "zoey@xyz.com"}</p>
-        </DropdownItem>
+        {user.loggedIn ? (
+          <DropdownItem textValue="profile" key="profile" className="h-14 gap-2">
+            <p className="font-semibold">Signed in as</p>
+            <p className="font-semibold">{user.name.split(" ")[0]}</p>
+          </DropdownItem>
+        ) : (
+          <DropdownItem textValue="login" key="login" onClick={login}>
+            Log In
+          </DropdownItem>
+        )}
         <DropdownItem textValue="settings" key="settings">
           My Settings
         </DropdownItem>

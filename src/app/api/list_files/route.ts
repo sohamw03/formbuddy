@@ -19,7 +19,7 @@ export async function listFiles() {
         fields: "nextPageToken, files(id, name, mimeType, parents, thumbnailLink)",
         pageSize: 100,
       });
-      console.log(res.data.files);
+      // console.log(res.data.files);
       return res.data.files;
     } catch (error) {
       throw error;
