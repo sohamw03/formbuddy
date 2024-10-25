@@ -1,25 +1,18 @@
 // Residence: Frontend
 "use client";
+import { useDisclosure } from "@nextui-org/react";
 import { getSession, signIn, signOut } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
-
-export interface Values {
-  user: Record<string, any>;
-  files: Array<{ name: string; id: string; mimeType: string; parents: string[]; thumbnailLink: string }>;
-  logout: () => void;
-  login: () => void;
-  listFiles: () => void;
-  createFile: (file: File, folder: string) => void;
-  removeFile: (id: string, folder: string) => void;
-  initUserDirective: (doListFiles: boolean) => void;
-}
 
 const globalContext = createContext<Values>({} as Values);
 
 export function GlobalContextProvider({ children }: { children: React.ReactNode }) {
   // Global states
   const [user, setUser] = useState<Record<string, any>>({ loggedIn: false });
-  const [files, setFiles] = useState<Array<{ name: string; id: string; mimeType: string; parents: string[]; thumbnailLink: string }>>([]);
+  const [files, setFiles] = useState<Array<fileObj>>([]);
+  const [openedFileId, setOpenedFileId] = useState("")
+  // NextUI modal
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   // Auth logout
   const logout = async () => {
@@ -140,6 +133,11 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     createFile,
     removeFile,
     initUserDirective,
+    isOpen,
+    onOpen,
+    onOpenChange,
+    openedFileId,
+    setOpenedFileId,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
@@ -148,3 +146,27 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
 export function useGlobal() {
   return useContext(globalContext);
 }
+
+export interface Values {
+  user: Record<string, any>;
+  files: Array<fileObj>;
+  logout: () => void;
+  login: () => void;
+  listFiles: () => void;
+  createFile: (file: File, folder: string) => void;
+  removeFile: (id: string, folder: string) => void;
+  initUserDirective: (doListFiles: boolean) => void;
+  isOpen: boolean;
+  onOpen: () => void;
+  onOpenChange: () => void;
+  openedFileId: string;
+  setOpenedFileId: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export type fileObj = {
+  name: string;
+  id: string;
+  mimeType: string;
+  parents: string[];
+  thumbnailLink: string;
+};

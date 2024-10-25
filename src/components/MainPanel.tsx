@@ -1,10 +1,11 @@
 "use client";
 
 import { useGlobal } from "@/drivers/GlobalContext";
+import { Spacer } from "@nextui-org/react";
 import { useEffect } from "react";
+import Entity from "./Entity/Entity";
 import styles from "./MainPanel.module.css";
 import Carousel from "./MainPanel/Carousel";
-import { Spacer } from "@nextui-org/react";
 import Upload from "./Upload";
 
 const folderMap: Record<string, string> = {
@@ -45,6 +46,7 @@ export default function MainPanel(props: { page: string }) {
           <h1 className={styles.heading}>Photos</h1>
           <Spacer y={4} />
           <Carousel title="" folder={folderMap[page]} />
+          <Entity />
         </div>
       );
     case "docs":
@@ -54,6 +56,7 @@ export default function MainPanel(props: { page: string }) {
           <h1 className={styles.heading}>Docs</h1>
           <Spacer y={4} />
           <Carousel title="" folder={folderMap[page]} />
+          <Entity />
         </div>
       );
     case "sign":
@@ -63,6 +66,7 @@ export default function MainPanel(props: { page: string }) {
           <h1 className={styles.heading}>Signatures</h1>
           <Spacer y={4} />
           <Carousel title="" folder={folderMap[page]} />
+          <Entity />
         </div>
       );
   }

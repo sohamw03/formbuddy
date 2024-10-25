@@ -15,13 +15,31 @@ export default function SidePanel() {
         <Link href={"/"}>FormBuddy</Link>
       </h1>
       <div className={styles.navWrapper}>
-        <Button className={styles.button} color="default" variant="flat" onClick={() => {router.push("/photos")}}>
+        <Button
+          className={styles.button}
+          color="default"
+          variant="flat"
+          onClick={() => {
+            router.push("/photos");
+          }}>
           Photos
         </Button>
-        <Button className={styles.button} color="default" variant="flat" onClick={() => {router.push("/docs")}}>
+        <Button
+          className={styles.button}
+          color="default"
+          variant="flat"
+          onClick={() => {
+            router.push("/docs");
+          }}>
           Docs
         </Button>
-        <Button className={styles.button} color="default" variant="flat" onClick={() => {router.push("/sign")}}>
+        <Button
+          className={styles.button}
+          color="default"
+          variant="flat"
+          onClick={() => {
+            router.push("/sign");
+          }}>
           Signatures
         </Button>
       </div>

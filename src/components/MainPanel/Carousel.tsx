@@ -1,10 +1,10 @@
 import { useGlobal } from "@/drivers/GlobalContext";
-import styles from "../MainPanel.module.css";
 import { Button, Card, CardBody, CardFooter, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image } from "@nextui-org/react";
+import styles from "../MainPanel.module.css";
 
 export default function Carousel(props: { title: string; folder: string }) {
   // Global States
-  const { files, removeFile } = useGlobal();
+  const { files, removeFile, onOpen, setOpenedFileId } = useGlobal();
   // Props
   const { title, folder } = props;
 
@@ -17,7 +17,15 @@ export default function Carousel(props: { title: string; folder: string }) {
       <div className={styles.cardWrapper}>
         {filesToShow.map((file) => (
           <div key={file.id} className="relative">
-            <Card shadow="sm" isPressable onPress={() => console.log("item pressed")} contextMenu="true" className={styles.card}>
+            <Card
+              shadow="sm"
+              isPressable
+              onPress={() => {
+                setOpenedFileId(file.id);
+                onOpen();
+              }}
+              contextMenu="true"
+              className={styles.card}>
               <CardBody className={styles.cardBody}>
                 <Image shadow="sm" radius="lg" width="100%" alt={file.name} className={styles.image} src={file.thumbnailLink} />
               </CardBody>
