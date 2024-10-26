@@ -10,7 +10,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   // Global states
   const [user, setUser] = useState<Record<string, any>>({ loggedIn: false });
   const [files, setFiles] = useState<Array<fileObj>>([]);
-  const [openedFileId, setOpenedFileId] = useState("")
+  const [openedFileId, setOpenedFileId] = useState("");
   // NextUI modal
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -59,16 +59,41 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
         method: "POST",
       });
       const responseJson = await response.json();
-      console.log(responseJson);
-      setFiles(
-        responseJson.files.map((file: any) => ({
+      const filesLocal = await Promise.all(
+        responseJson.files.map(async (file: any) => ({
           name: file.name,
           id: file.id,
           mimeType: file.mimeType,
           parents: file.parents,
           thumbnailLink: file.thumbnailLink,
+          blobURL: `${file.mimeType.includes("image") ? await downFile(file.id) : ""}`,
         }))
       );
+      setFiles(filesLocal);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Download file
+  const downFile = async (id: string) => {
+    const existingFile = files.find((file) => file.id === id);
+    if (existingFile?.blobURL) return existingFile.blobURL;
+    try {
+      const response = await fetch("/api/down_file", {
+        method: "POST",
+        body: JSON.stringify({ id: id }),
+      });
+      if (response.status !== 200) {
+        const responseJson = await response.json();
+        console.log(responseJson);
+      } else {
+        const arrayBuffer = await response.arrayBuffer();
+        const contentType = response.headers.get("Content-Type") || "application/octet-stream";
+        const responseBlob = new Blob([arrayBuffer], { type: contentType });
+        const responseBlobURL = URL.createObjectURL(responseBlob);
+        return responseBlobURL;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -138,6 +163,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     onOpenChange,
     openedFileId,
     setOpenedFileId,
+    downFile,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
@@ -161,6 +187,7 @@ export interface Values {
   onOpenChange: () => void;
   openedFileId: string;
   setOpenedFileId: React.Dispatch<React.SetStateAction<string>>;
+  downFile: (id: string) => Promise<string | undefined>;
 }
 
 export type fileObj = {
@@ -169,4 +196,5 @@ export type fileObj = {
   mimeType: string;
   parents: string[];
   thumbnailLink: string;
+  blobURL: string;
 };

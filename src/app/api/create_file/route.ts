@@ -1,5 +1,4 @@
 import { getDriveClient } from "@/drivers/ConnectDrive";
-import fs from "fs";
 import { Readable } from "stream";
 
 export async function POST(request: Request) {

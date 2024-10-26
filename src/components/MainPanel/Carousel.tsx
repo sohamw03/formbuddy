@@ -1,12 +1,15 @@
 import { useGlobal } from "@/drivers/GlobalContext";
 import { Button, Card, CardBody, CardFooter, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image } from "@nextui-org/react";
 import styles from "../MainPanel.module.css";
+import { usePathname } from "next/navigation";
 
 export default function Carousel(props: { title: string; folder: string }) {
   // Global States
-  const { files, removeFile, onOpen, setOpenedFileId } = useGlobal();
+  const { files, removeFile, onOpen, setOpenedFileId, downFile } = useGlobal();
   // Props
   const { title, folder } = props;
+
+  const path = usePathname();
 
   // Decide which files to show based on the folder
   const folderData = files.find((file) => file.name === folder);
@@ -21,6 +24,7 @@ export default function Carousel(props: { title: string; folder: string }) {
               shadow="sm"
               isPressable
               onPress={() => {
+                if (path === "/") return;
                 setOpenedFileId(file.id);
                 onOpen();
               }}
