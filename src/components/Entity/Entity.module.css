@@ -1,0 +1,4 @@
+.image {
+  @apply object-contain;
+  height: "10rem";
+}

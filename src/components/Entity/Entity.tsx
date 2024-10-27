@@ -1,6 +1,7 @@
 import { fileObj, useGlobal } from "@/drivers/GlobalContext";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import styles from "./Entity.module.css";
 
 export default function Entity() {
   // Global context
@@ -16,20 +17,8 @@ export default function Entity() {
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
-            <ModalBody>
-              {file && <img src={file.blobURL} alt={file.name} style={{ height: "20rem", width: "100%", objectFit: "contain" }} />}
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non risus hendrerit venenatis. Pellentesque sit amet hendrerit risus, sed porttitor quam.</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non risus hendrerit venenatis. Pellentesque sit amet hendrerit risus, sed porttitor quam.</p>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
-                Close
-              </Button>
-              <Button color="primary" onPress={onClose}>
-                Action
-              </Button>
-            </ModalFooter>
+            <ModalHeader className="flex flex-col gap-1">{file?.name}</ModalHeader>
+            <ModalBody>{file && <img src={file.blobURL} alt={file.name} className={styles.image} />}</ModalBody>
           </>
         )}
       </ModalContent>
