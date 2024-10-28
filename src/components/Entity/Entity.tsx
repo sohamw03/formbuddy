@@ -2,6 +2,7 @@ import { fileObj, useGlobal } from "@/drivers/GlobalContext";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import styles from "./Entity.module.css";
+import Toolbar from "./Toolbar/Toolbar";
 
 export default function Entity() {
   // Global context
@@ -13,12 +14,13 @@ export default function Entity() {
   }, [openedFileId, files]);
 
   return (
-    <Modal isOpen={isOpen} placement="center" onOpenChange={onOpenChange} size="4xl" scrollBehavior="inside" backdrop="blur">
-      <ModalContent>
+    <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange} size="5xl" scrollBehavior="inside" backdrop="blur">
+      <ModalContent className="relative">
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1">{file?.name}</ModalHeader>
-            <ModalBody>{file && <img src={file.blobURL} alt={file.name} className={styles.image} />}</ModalBody>
+            <ModalHeader className={styles.header}>{file?.name}</ModalHeader>
+            <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={styles.image} />}</ModalBody>
+            <Toolbar />
           </>
         )}
       </ModalContent>
