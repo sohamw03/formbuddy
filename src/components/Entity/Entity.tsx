@@ -17,7 +17,7 @@ export default function Entity() {
     <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange} size="5xl" scrollBehavior="inside" backdrop="blur">
       <ModalContent className="relative">
         {(onClose) => (
-          <> TODO
+          <>
             <ModalHeader className={styles.header}>{file?.name}</ModalHeader>
             <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={styles.image} />}</ModalBody>
             <Toolbar />
