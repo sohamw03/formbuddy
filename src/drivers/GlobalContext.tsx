@@ -2,7 +2,7 @@
 "use client";
 import { useDisclosure } from "@nextui-org/react";
 import { getSession, signIn, signOut } from "next-auth/react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 const globalContext = createContext<Values>({} as Values);
 
@@ -11,6 +11,8 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   const [user, setUser] = useState<Record<string, any>>({ loggedIn: false });
   const [files, setFiles] = useState<Array<fileObj>>([]);
   const [openedFileId, setOpenedFileId] = useState("");
+  // Refs
+  const currImgRef = useRef<HTMLImageElement>(null);
   // NextUI modal
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -164,6 +166,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     openedFileId,
     setOpenedFileId,
     downFile,
+    currImgRef,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
@@ -188,6 +191,7 @@ export interface Values {
   openedFileId: string;
   setOpenedFileId: React.Dispatch<React.SetStateAction<string>>;
   downFile: (id: string) => Promise<string | undefined>;
+  currImgRef?: React.MutableRefObject<HTMLImageElement | null>;
 }
 
 export type fileObj = {
