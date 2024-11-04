@@ -1,12 +1,15 @@
 import { Button } from "@nextui-org/react";
 import { useState } from "react";
 import styles from "./Toolbar.module.css";
+import { useGlobal } from "@/drivers/GlobalContext";
 export default function Toolbar({ resolution }: { resolution: { width: number; height: number } }) {
+  // Global states
+  const { setCropOpen } = useGlobal();
   // Local state
   const [res, setRes] = useState(resolution);
 
   const onCropClick = () => {
-    console.log("Crop clicked");
+    setCropOpen((prev) => !prev);
   };
   return (
     <div className={styles.toolbar}>
@@ -20,7 +23,7 @@ export default function Toolbar({ resolution }: { resolution: { width: number; h
         </div>
         <div>
           {/* @react-image-crop */}
-          <Button className={styles.cropBtn} variant="bordered" onClick={onCropClick}>
+          <Button className={styles.cropBtn} variant="flat" onClick={onCropClick}>
             <img src="/icons/crop_icon.svg" alt="crop" />
           </Button>
         </div>

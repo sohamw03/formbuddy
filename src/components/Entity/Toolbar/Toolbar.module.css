@@ -14,5 +14,5 @@
   @apply rounded-lg;
 }
 .cropBtn > img {
-  @apply size-5/6;
+  @apply size-[75%];
 }

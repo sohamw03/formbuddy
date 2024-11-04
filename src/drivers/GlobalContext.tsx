@@ -16,6 +16,9 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   // NextUI modal
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  // Toolbar states
+  const [cropOpen, setCropOpen] = useState<boolean>(false);
+
   // Auth logout
   const logout = async () => {
     // Sign out from next-auth
@@ -167,6 +170,8 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     setOpenedFileId,
     downFile,
     currImgRef,
+    cropOpen,
+    setCropOpen,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
@@ -192,6 +197,8 @@ export interface Values {
   setOpenedFileId: React.Dispatch<React.SetStateAction<string>>;
   downFile: (id: string) => Promise<string | undefined>;
   currImgRef?: React.MutableRefObject<HTMLImageElement | null>;
+  cropOpen: boolean;
+  setCropOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type fileObj = {
