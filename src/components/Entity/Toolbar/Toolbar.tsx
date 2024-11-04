@@ -1,29 +1,13 @@
-import { useEffect, useState } from "react";
+import { Button } from "@nextui-org/react";
+import { useState } from "react";
 import styles from "./Toolbar.module.css";
-import { useGlobal } from "@/drivers/GlobalContext";
-export default function Toolbar() {
-  // Global context
-  const { currImgRef, isOpen, openedFileId } = useGlobal();
-  const [resolution, setResolution] = useState({ width: currImgRef?.current?.naturalWidth, height: currImgRef?.current?.naturalHeight });
+export default function Toolbar({ resolution }: { resolution: { width: number; height: number } }) {
+  // Local state
+  const [res, setRes] = useState(resolution);
 
-  // Extract resolution of the image when it is loaded
-  const extractResolution = () => {
-    setResolution({ width: currImgRef?.current?.naturalWidth, height: currImgRef?.current?.naturalHeight });
+  const onCropClick = () => {
+    console.log("Crop clicked");
   };
-  useEffect(() => {
-    currImgRef?.current?.addEventListener("load", extractResolution);
-    if (currImgRef?.current)
-      currImgRef.current.onload = () => {
-        extractResolution();
-      };
-    return () => {
-      currImgRef?.current?.removeEventListener("load", extractResolution);
-    };
-  }, []);
-  useEffect(() => {
-    extractResolution();
-  }, [openedFileId, isOpen]);
-
   return (
     <div className={styles.toolbar}>
       <div className={styles.toolbarInWrapper}>
@@ -35,8 +19,10 @@ export default function Toolbar() {
           {resolution.width} x {resolution.height}
         </div>
         <div>
-          Crop
-          {/* https://valentinh.github.io/react-easy-crop */}
+          {/* @react-image-crop */}
+          <Button className={styles.cropBtn} variant="bordered" onClick={onCropClick}>
+            <img src="/icons/crop_icon.svg" alt="crop" />
+          </Button>
         </div>
       </div>
     </div>

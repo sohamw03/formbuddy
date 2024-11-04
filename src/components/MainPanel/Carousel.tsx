@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 export default function Carousel(props: { title: string; folder: string }) {
   // Global States
-  const { files, removeFile, onOpen, setOpenedFileId, downFile } = useGlobal();
+  const { files, removeFile, onOpen, setOpenedFileId, currImgRef } = useGlobal();
   // Props
   const { title, folder } = props;
 

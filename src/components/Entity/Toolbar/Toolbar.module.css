@@ -1,9 +1,18 @@
 .toolbar {
   @apply flex justify-center items-center;
   @apply absolute bottom-5 left-1/2 transform -translate-x-1/2;
-  @apply bg-inherit backdrop-brightness-50 rounded-lg p-4 w-3/4 shadow-sm;
+  @apply bg-inherit backdrop-brightness-50 rounded-lg p-2 w-3/4 h-14 shadow-sm;
 }
 
 .toolbarInWrapper {
-  @apply flex flex-row justify-between align-middle w-full;
+  @apply flex flex-row justify-between items-center w-full h-full;
+}
+
+.cropBtn {
+  @apply flex justify-center items-center;
+  @apply aspect-square p-0 m-0 min-w-0 h-9;
+  @apply rounded-lg;
+}
+.cropBtn > img {
+  @apply size-5/6;
 }

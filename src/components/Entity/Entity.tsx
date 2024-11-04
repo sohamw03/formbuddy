@@ -9,10 +9,17 @@ export default function Entity() {
   const { isOpen, onOpenChange, files, openedFileId, currImgRef } = useGlobal();
   // Local state
   const [file, setFile] = useState<fileObj | undefined>(files.find((file) => file.id === openedFileId));
-  // const [file, setFile] = useState<fileObj | undefined>({ name: "image.jpg", blobURL: "https://gratisography.com/wp-content/uploads/2024/10/gratisography-cool-cat-800x525.jpg", id: "cgsciac", mimeType: "image/jpg", parents: [""], thumbnailLink: "", });
+  // const [file, setFile] = useState<fileObj | undefined>({ name: "image.jpg", blobURL: "https://gratisography.com/wp-content/uploads/2024/10/gratisography-cool-cat-800x525.jpg", id: "cgsciac", mimeType: "image/jpg", parents: [""], thumbnailLink: "" });
+  const [resolution, setResolution] = useState({ width: 0, height: 0 });
+
   useEffect(() => {
     setFile(files.find((file) => file.id === openedFileId));
   }, [openedFileId, files]);
+
+  // Extract resolution of the image when it is loaded
+  const extractResolution = () => {
+    if (currImgRef?.current) setResolution({ width: currImgRef.current.naturalWidth, height: currImgRef.current.naturalHeight });
+  };
 
   return (
     <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange} size="5xl" scrollBehavior="inside" backdrop="blur">
@@ -20,8 +27,8 @@ export default function Entity() {
         {(onClose) => (
           <>
             <ModalHeader className={styles.header}>{file?.name}</ModalHeader>
-            <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={styles.image} ref={currImgRef} />}</ModalBody>
-            <Toolbar />
+            <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={styles.image} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>
+            <Toolbar resolution={resolution} />
           </>
         )}
       </ModalContent>
