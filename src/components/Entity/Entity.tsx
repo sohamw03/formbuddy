@@ -30,7 +30,7 @@ export default function Entity() {
             <>
               <ModalHeader className={styles.header}>{file.name}</ModalHeader>
               {!cropOpen && <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={styles.image} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>}
-              <CropPlugin isOpen={cropOpen} src={file.blobURL} />
+              <CropPlugin isOpen={cropOpen} src={file.blobURL} resolution={resolution}/>
               <Toolbar resolution={resolution} />
             </>
           )}
