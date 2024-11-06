@@ -3,6 +3,7 @@
 import { useDisclosure } from "@nextui-org/react";
 import { getSession, signIn, signOut } from "next-auth/react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { type Crop } from "react-image-crop";
 
 const globalContext = createContext<Values>({} as Values);
 
@@ -17,7 +18,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   // Toolbar states
-  const [cropOpen, setCropOpen] = useState<boolean>(false);
+  const [toolbarMode, setToolbarMode] = useState<"crop" | "normal">("normal");
 
   // Auth logout
   const logout = async () => {
@@ -170,8 +171,8 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     setOpenedFileId,
     downFile,
     currImgRef,
-    cropOpen,
-    setCropOpen,
+    toolbarMode,
+    setToolbarMode,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
@@ -197,8 +198,8 @@ export interface Values {
   setOpenedFileId: React.Dispatch<React.SetStateAction<string>>;
   downFile: (id: string) => Promise<string | undefined>;
   currImgRef?: React.MutableRefObject<HTMLImageElement | null>;
-  cropOpen: boolean;
-  setCropOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  toolbarMode: "crop" | "normal";
+  setToolbarMode: React.Dispatch<React.SetStateAction<"crop" | "normal">>;
 }
 
 export type fileObj = {

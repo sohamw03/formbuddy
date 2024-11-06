@@ -1,24 +1,33 @@
-import { useState } from "react";
-import ReactCrop, { type PercentCrop, type PixelCrop, type Crop } from "react-image-crop";
+import { useGlobal } from "@/drivers/GlobalContext";
+import { cn } from "@nextui-org/react";
+import ReactCrop, { type Crop, type PercentCrop, type PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import EntityStyles from "../Entity.module.css";
+import { useEffect, useState } from "react";
 
-export default function CropPlugin({ isOpen, src, resolution }: { isOpen: boolean; src: string; resolution: { width: number; height: number } }) {
+export default function CropPlugin({ isOpen, src, crop, setCrop }: { isOpen: boolean; src: string; crop: Crop | undefined; setCrop: React.Dispatch<React.SetStateAction<Crop | undefined>> }) {
   if (!isOpen) return null;
 
-  const [crop, setCrop] = useState<Crop>();
+  const [localCrop, setLocalCrop] = useState<Crop>();
 
   const onComplete = (crop: PixelCrop, percentCrop: PercentCrop) => {
     console.log(crop, percentCrop);
+    setCrop(crop);
   };
+
+  useEffect(() => {
+    setLocalCrop(crop);
+  }, []);
+
   return (
-    <ReactCrop //
-      crop={crop}
-      onChange={(c) => setCrop(c)}
-      onComplete={onComplete}
-      maxWidth={resolution.width}
-      maxHeight={resolution.height}
-      ruleOfThirds>
-      <img src={src} />
-    </ReactCrop>
+    <div className={cn(EntityStyles.modalBody, "flex justify-center w-full")}>
+      <ReactCrop //
+        crop={localCrop}
+        onChange={(c) => setLocalCrop(c)}
+        onComplete={onComplete}
+        ruleOfThirds>
+        <img src={src} className={cn(EntityStyles.image, "w-full")} />
+      </ReactCrop>
+    </div>
   );
 }

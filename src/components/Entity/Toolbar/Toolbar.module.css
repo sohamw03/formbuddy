@@ -8,11 +8,11 @@
   @apply flex flex-row justify-between items-center w-full h-full;
 }
 
-.cropBtn {
+.toolBtn {
   @apply flex justify-center items-center;
   @apply aspect-square p-0 m-0 min-w-0 h-9;
   @apply rounded-lg;
 }
-.cropBtn > img {
+.toolBtn > img {
   @apply size-[75%];
 }
