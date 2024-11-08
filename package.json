@@ -17,6 +17,7 @@
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
     "react-image-crop": "^11.0.7"
   },
   "devDependencies": {

@@ -3,6 +3,7 @@ import { Button } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import styles from "./Toolbar.module.css";
 import { type Crop } from "react-image-crop";
+import toast from "react-hot-toast";
 
 export default function Toolbar({ resolution, crop }: { resolution: { width: number; height: number }; crop: Crop | undefined }) {
   // Global states
@@ -53,7 +54,13 @@ export default function Toolbar({ resolution, crop }: { resolution: { width: num
                     {res.width} x {res.height}
                   </div>
                   <div>
-                    <Button className={styles.toolBtn} variant="flat" onClick={() => setToolbarMode("normal")}>
+                    <Button
+                      className={styles.toolBtn}
+                      variant="flat"
+                      onClick={() => {
+                        setToolbarMode("normal");
+                        toast.success("Crop applied successfully!");
+                      }}>
                       <img src="/icons/done_icon.svg" alt="done" />
                     </Button>
                   </div>
