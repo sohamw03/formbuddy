@@ -11,6 +11,28 @@ export default function Toolbar({ resolution, crop }: { resolution: { width: num
   // Local state
   const [res, setRes] = useState(resolution);
 
+  // Crop the selected image
+  const cropImage = () => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    canvas.width = res.width;
+    canvas.height = res.height;
+    ctx.drawImage(
+      document.querySelector<HTMLImageElement>("#image") as HTMLImageElement,
+      crop?.x || 0,
+      crop?.y || 0,
+      crop?.width || 0,
+      crop?.height || 0,
+      0,
+      0,
+      res.width,
+      res.height
+    );
+    const dataURL = canvas.toDataURL("image/png");
+    return dataURL;
+  };
+
   // Update engine
   useEffect(() => {
     switch (toolbarMode) {
@@ -59,7 +81,8 @@ export default function Toolbar({ resolution, crop }: { resolution: { width: num
                       variant="flat"
                       onClick={() => {
                         setToolbarMode("normal");
-                        toast.success("Crop applied successfully!");
+                        toast.success(`Cropped image at size ${res.width} x ${res.height}.`);
+
                       }}>
                       <img src="/icons/done_icon.svg" alt="done" />
                     </Button>
