@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 export default function Carousel(props: { title: string; folder: string }) {
   // Global States
-  const { files, removeFile, onOpen, setOpenedFileId, currImgRef } = useGlobal();
+  const { files, removeFile, onOpen, setOpenedFileId, currImgRef, setToolbarMode } = useGlobal();
   // Props
   const { title, folder } = props;
 
@@ -26,6 +26,7 @@ export default function Carousel(props: { title: string; folder: string }) {
               onPress={() => {
                 if (path === "/") return;
                 setOpenedFileId(file.id);
+                setToolbarMode("normal")
                 onOpen();
               }}
               contextMenu="true"

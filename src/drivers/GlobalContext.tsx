@@ -139,6 +139,29 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     }
   };
 
+  // Crop image
+  const cropImage = async (id: string, crop: Crop) => {
+    try {
+      const response = await fetch("/api/crop_file", {
+        method: "POST",
+        body: JSON.stringify({ id: id, crop: crop }),
+      });
+      if (response.status !== 200) {
+        const responseJson = await response.json();
+        console.log(responseJson);
+      } else {
+        const arrayBuffer = await response.arrayBuffer();
+        const contentType = response.headers.get("Content-Type") || "application/octet-stream";
+        const responseBlob = new Blob([arrayBuffer], { type: contentType });
+        const responseBlobURL = URL.createObjectURL(responseBlob);
+        return responseBlobURL;
+      }
+    } catch (error) {
+      console.log(error);
+      return "";
+    }
+  };
+
   // Load state from local storage on reload
   useEffect(() => {
     const loadStateFromLocal = async () => {
@@ -173,6 +196,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     currImgRef,
     toolbarMode,
     setToolbarMode,
+    cropImage,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
@@ -200,6 +224,7 @@ export interface Values {
   currImgRef?: React.MutableRefObject<HTMLImageElement | null>;
   toolbarMode: "crop" | "normal";
   setToolbarMode: React.Dispatch<React.SetStateAction<"crop" | "normal">>;
+  cropImage: (id: string, crop: Crop) => Promise<string | undefined>;
 }
 
 export type fileObj = {

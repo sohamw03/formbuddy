@@ -5,49 +5,24 @@ import styles from "./Toolbar.module.css";
 import { type Crop } from "react-image-crop";
 import toast from "react-hot-toast";
 
-export default function Toolbar({ resolution, crop, fileState }: { resolution: { width: number; height: number }; crop: Crop | undefined; fileState: { file: fileObj; setFile: React.Dispatch<React.SetStateAction<fileObj | undefined>> } }) {
+export default function Toolbar({ resolution, crop, percentCrop, fileState }: { resolution: { width: number; height: number }; crop: Crop | undefined; fileState: { file: fileObj; setFile: React.Dispatch<React.SetStateAction<fileObj | undefined>> }; percentCrop: Crop | undefined }) {
   // Global states
-  const { toolbarMode, setToolbarMode } = useGlobal();
+  const { toolbarMode, setToolbarMode, cropImage } = useGlobal();
   // Local state
   const [res, setRes] = useState(resolution);
-
-  // Crop the selected image
-  const cropImage = () => {
-    if (!crop) return;
-    const image = new Image();
-    image.src = fileState.file.blobURL;
-    const canvas = document.createElement("canvas");
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-    canvas.width = crop.width;
-    canvas.height = crop.height;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const pixelRatio = window.devicePixelRatio;
-    canvas.width = crop.width * pixelRatio;
-    canvas.height = crop.height * pixelRatio;
-    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    ctx.imageSmoothingQuality = "high";
-
-    ctx.drawImage(image, crop.x * scaleX, crop.y * scaleY, crop.width * scaleX, crop.height * scaleY, 0, 0, crop.width, crop.height);
-
-    // Converting to base64
-    const base64Image = canvas.toDataURL(fileState.file.mimeType);
-    console.log(base64Image);
-    return base64Image;
-  };
 
   // Update engine
   useEffect(() => {
     switch (toolbarMode) {
       case "crop":
-        setRes({ width: crop?.width || 0, height: crop?.height || 0 });
+        if (percentCrop)
+          setRes({ width: Math.round((percentCrop!.width / 100) * resolution.width), height: Math.round((percentCrop!.height / 100) * resolution.height) });
         break;
       case "normal":
         setRes(resolution);
         break;
     }
-  }, [crop, toolbarMode, resolution]);
+  }, [crop, percentCrop, toolbarMode, resolution]);
 
   return (
     <div className={styles.toolbar}>
@@ -83,16 +58,24 @@ export default function Toolbar({ resolution, crop, fileState }: { resolution: {
                     <Button
                       className={styles.toolBtn}
                       variant="flat"
-                      onClick={() => {
+                      onClick={async () => {
                         setToolbarMode("normal");
                         toast.success(`Cropped image at size ${res.width} x ${res.height}.`);
+                        const newBlobURL = await cropImage(fileState.file.id, {
+                          unit: "px",
+                          x: (percentCrop!.x / 100) * resolution.width,
+                          y: (percentCrop!.y / 100) * resolution.height,
+                          width: res.width,
+                          height: res.height,
+                        } as Crop);
+                        console.log(newBlobURL);
                         const variant = {
                           name: `${fileState.file.name} [cropped] [${res.width}x${res.height}]`,
                           id: "",
                           mimeType: fileState.file.mimeType,
                           parents: fileState.file.parents,
                           thumbnailLink: "",
-                          blobURL: cropImage(),
+                          blobURL: newBlobURL,
                         } as unknown as fileObj;
                         fileState.setFile(variant);
                       }}>

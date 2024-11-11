@@ -15,6 +15,7 @@ export default function Entity() {
   const [resolution, setResolution] = useState({ width: 0, height: 0 });
   // Crop plugin states
   const [crop, setCrop] = useState<Crop>();
+  const [percentCrop, setPercentCrop] = useState<Crop>();
 
   useEffect(() => {
     setFile(files.find((file) => file.id === openedFileId));
@@ -37,10 +38,10 @@ export default function Entity() {
                   case "normal":
                     return <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={styles.image} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>;
                   case "crop":
-                    return <CropPlugin isOpen={true} src={file.blobURL} crop={crop} setCrop={setCrop} />;
+                    return <CropPlugin isOpen={true} src={file.blobURL} crop={crop} setCrop={setCrop} percentCrop={percentCrop} setPercentCrop={setPercentCrop} />;
                 }
               })()}
-              <Toolbar resolution={resolution} crop={crop} fileState={{ file, setFile }} />
+              <Toolbar resolution={resolution} crop={crop} percentCrop={percentCrop} fileState={{ file, setFile }} />
             </>
           )}
         </ModalContent>
