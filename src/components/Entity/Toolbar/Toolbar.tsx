@@ -34,7 +34,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
               return (
                 <>
                   <div>
-                    100%
+                  Quality
                     {/* https://imagekit.io/blog/image-cropping-in-react-application */}
                   </div>
                   <div>
