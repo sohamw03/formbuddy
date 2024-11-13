@@ -18,7 +18,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   // Toolbar states
-  const [toolbarMode, setToolbarMode] = useState<"crop" | "normal">("normal");
+  const [toolbarMode, setToolbarMode] = useState<toolbarModeType>("normal");
 
   // Auth logout
   const logout = async () => {
@@ -206,6 +206,8 @@ export function useGlobal() {
   return useContext(globalContext);
 }
 
+type toolbarModeType = "crop" | "normal" | "cropped";
+
 export interface Values {
   user: Record<string, any>;
   files: Array<fileObj>;
@@ -222,8 +224,8 @@ export interface Values {
   setOpenedFileId: React.Dispatch<React.SetStateAction<string>>;
   downFile: (id: string) => Promise<string | undefined>;
   currImgRef?: React.MutableRefObject<HTMLImageElement | null>;
-  toolbarMode: "crop" | "normal";
-  setToolbarMode: React.Dispatch<React.SetStateAction<"crop" | "normal">>;
+  toolbarMode: toolbarModeType;
+  setToolbarMode: React.Dispatch<React.SetStateAction<toolbarModeType>>;
   cropImage: (id: string, crop: Crop) => Promise<string | undefined>;
 }
 

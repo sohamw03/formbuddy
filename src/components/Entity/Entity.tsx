@@ -39,6 +39,8 @@ export default function Entity() {
                     return <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={styles.image} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>;
                   case "crop":
                     return <CropPlugin isOpen={true} src={file.blobURL} crop={crop} setCrop={setCrop} percentCrop={percentCrop} setPercentCrop={setPercentCrop} />;
+                  case "cropped":
+                    return <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={styles.image} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>;
                 }
               })()}
               <Toolbar resolution={resolution} crop={crop} percentCrop={percentCrop} fileState={{ file, setFile }} />

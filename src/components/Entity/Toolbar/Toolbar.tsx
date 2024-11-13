@@ -15,8 +15,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
   useEffect(() => {
     switch (toolbarMode) {
       case "crop":
-        if (percentCrop)
-          setRes({ width: Math.round((percentCrop!.width / 100) * resolution.width), height: Math.round((percentCrop!.height / 100) * resolution.height) });
+        if (percentCrop) setRes({ width: Math.round((percentCrop!.width / 100) * resolution.width), height: Math.round((percentCrop!.height / 100) * resolution.height) });
         break;
       case "normal":
         setRes(resolution);
@@ -33,15 +32,15 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
             case "normal":
               return (
                 <>
-                  <div>
-                  Quality
+                  <div className="ps-2" style={{ justifySelf: "start" }}>
+                    100%
                     {/* https://imagekit.io/blog/image-cropping-in-react-application */}
                   </div>
-                  <div>
+                  <div style={{ justifySelf: "center" }}>
                     {res.width} x {res.height}
                   </div>
                   <div>
-                    <Button className={styles.toolBtn} variant="flat" onClick={() => setToolbarMode("crop")}>
+                    <Button className={styles.toolBtn} variant="flat" onClick={() => setToolbarMode("crop")} style={{ justifySelf: "end" }}>
                       <img src="/icons/crop_icon.svg" alt="crop" />
                     </Button>
                   </div>
@@ -50,11 +49,11 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
             case "crop":
               return (
                 <>
-                  <div className="w-12"></div>
-                  <div>
+                  <div style={{ justifySelf: "start" }}></div>
+                  <div style={{ justifySelf: "center" }}>
                     {res.width} x {res.height}
                   </div>
-                  <div>
+                  <div style={{ justifySelf: "end" }}>
                     <Button
                       className={styles.toolBtn}
                       variant="flat"
@@ -78,8 +77,28 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                           blobURL: newBlobURL,
                         } as unknown as fileObj;
                         fileState.setFile(variant);
+                        setToolbarMode("cropped");
                       }}>
                       <img src="/icons/done_icon.svg" alt="done" />
+                    </Button>
+                  </div>
+                </>
+              );
+            case "cropped":
+              return (
+                <>
+                  <div style={{ justifySelf: "start" }}></div>
+                  <div style={{ justifySelf: "center" }}>
+                    {res.width} x {res.height}
+                  </div>
+                  <div style={{ justifySelf: "end" }}>
+                    <Button
+                      className={styles.saveBtn}
+                      variant="flat"
+                      onClick={() => {
+                        console.log("Save");
+                      }}>
+                      Save
                     </Button>
                   </div>
                 </>

@@ -5,7 +5,8 @@
 }
 
 .toolbarInWrapper {
-  @apply flex flex-row justify-between items-center w-full h-full;
+  @apply grid grid-cols-3 grid-rows-1 items-center;
+  @apply w-full h-full;
 }
 
 .toolBtn {
@@ -15,4 +16,10 @@
 }
 .toolBtn > img {
   @apply size-[75%];
+}
+
+.saveBtn {
+  @apply flex justify-center items-center;
+  @apply aspect-square w-16 p-0 m-0 min-w-0 h-9;
+  @apply rounded-lg;
 }
