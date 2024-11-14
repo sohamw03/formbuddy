@@ -7,9 +7,10 @@ import toast from "react-hot-toast";
 
 export default function Toolbar({ resolution, crop, percentCrop, fileState }: { resolution: { width: number; height: number }; crop: Crop | undefined; fileState: { file: fileObj; setFile: React.Dispatch<React.SetStateAction<fileObj | undefined>> }; percentCrop: Crop | undefined }) {
   // Global states
-  const { toolbarMode, setToolbarMode, cropImage } = useGlobal();
+  const { toolbarMode, setToolbarMode, cropImage, createFile, currFolder } = useGlobal();
   // Local state
   const [res, setRes] = useState(resolution);
+  const [saveDisabled, setSaveDisabled] = useState(false);
 
   // Update engine
   useEffect(() => {
@@ -68,8 +69,9 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                           height: res.height,
                         } as Crop);
                         console.log(newBlobURL);
+                        // Create a new file object for the cropped image
                         const variant = {
-                          name: `${fileState.file.name} [cropped] [${res.width}x${res.height}]`,
+                          name: fileState.file.name.replace(/(\.[^.]+)$/, ` [${res.width}x${res.height}]$1`),
                           id: "",
                           mimeType: fileState.file.mimeType,
                           parents: fileState.file.parents,
@@ -95,9 +97,16 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                     <Button
                       className={styles.saveBtn}
                       variant="flat"
-                      onClick={() => {
-                        console.log("Save");
-                      }}>
+                      onClick={async () => {
+                        setSaveDisabled(true);
+                        // Convert blobURL to File
+                        const response = await fetch(fileState.file.blobURL);
+                        const blob = await response.blob();
+                        const croppedFile = new File([blob], fileState.file.name, { type: blob.type });
+                        // Send the cropped file to the backend
+                        createFile(croppedFile, currFolder);
+                      }}
+                      disabled={saveDisabled}>
                       Save
                     </Button>
                   </div>

@@ -2,6 +2,7 @@
 "use client";
 import { useDisclosure } from "@nextui-org/react";
 import { getSession, signIn, signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { type Crop } from "react-image-crop";
 
@@ -12,6 +13,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   const [user, setUser] = useState<Record<string, any>>({ loggedIn: false });
   const [files, setFiles] = useState<Array<fileObj>>([]);
   const [openedFileId, setOpenedFileId] = useState("");
+  const [currFolder, setCurrFolder] = useState<currFolderType>("home");
   // Refs
   const currImgRef = useRef<HTMLImageElement>(null);
   // NextUI modal
@@ -19,6 +21,8 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
 
   // Toolbar states
   const [toolbarMode, setToolbarMode] = useState<toolbarModeType>("normal");
+
+  const path = usePathname();
 
   // Auth logout
   const logout = async () => {
@@ -162,6 +166,26 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     }
   };
 
+  // Get file metadata
+  const getFile = async (id: string) => {
+    try {
+      const response = await fetch("/api/get_file", {
+        method: "POST",
+        body: JSON.stringify({ id }),
+      });
+      if (response.status !== 200) {
+        const responseJson = await response.json();
+        console.log(responseJson);
+        return null;
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
   // Load state from local storage on reload
   useEffect(() => {
     const loadStateFromLocal = async () => {
@@ -177,6 +201,26 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     };
     loadStateFromLocal();
   }, []);
+
+  // Update the current folder based on page change
+  useEffect(() => {
+    switch (path) {
+      case "/":
+        setCurrFolder("home");
+        break;
+      case "/photos":
+        setCurrFolder("photos");
+        break;
+      case "/docs":
+        setCurrFolder("docs");
+        break;
+      case "/sign":
+        setCurrFolder("signatures");
+        break;
+      default:
+        break;
+    }
+  }, [path]);
 
   const values: Values = {
     user,
@@ -197,6 +241,9 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     toolbarMode,
     setToolbarMode,
     cropImage,
+    getFile,
+    currFolder,
+    setCurrFolder,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
@@ -206,6 +253,7 @@ export function useGlobal() {
   return useContext(globalContext);
 }
 
+type currFolderType = "home" | "photos" | "docs" | "signatures";
 type toolbarModeType = "crop" | "normal" | "cropped";
 
 export interface Values {
@@ -227,6 +275,9 @@ export interface Values {
   toolbarMode: toolbarModeType;
   setToolbarMode: React.Dispatch<React.SetStateAction<toolbarModeType>>;
   cropImage: (id: string, crop: Crop) => Promise<string | undefined>;
+  getFile: (id: string) => Promise<any | null>;
+  currFolder: currFolderType;
+  setCurrFolder: React.Dispatch<React.SetStateAction<currFolderType>>;
 }
 
 export type fileObj = {
