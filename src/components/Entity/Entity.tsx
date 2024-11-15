@@ -34,13 +34,15 @@ export default function Entity() {
             <>
               <ModalHeader className={styles.header}>{file.name}</ModalHeader>
               {(() => {
+                // 64rem x 35rem
+                const calcImgStyle = resolution.width / resolution.height > 64 / 35 ? styles.image : styles.imageVert;
                 switch (toolbarMode) {
                   case "normal":
-                    return <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={styles.image} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>;
+                    return <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>;
                   case "crop":
-                    return <CropPlugin isOpen={true} src={file.blobURL} crop={crop} setCrop={setCrop} percentCrop={percentCrop} setPercentCrop={setPercentCrop} />;
+                    return <CropPlugin isOpen={true} src={file.blobURL} crop={crop} setCrop={setCrop} percentCrop={percentCrop} setPercentCrop={setPercentCrop} calcImgStyle={calcImgStyle} />;
                   case "cropped":
-                    return <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={styles.image} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>;
+                    return <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>;
                 }
               })()}
               <Toolbar resolution={resolution} crop={crop} percentCrop={percentCrop} fileState={{ file, setFile }} />

@@ -33,7 +33,7 @@ export default function RootLayout({
               {children}
             </main>
             <Toaster
-              position="bottom-right"
+              position="bottom-center"
               reverseOrder={false}
               gutter={8}
               containerClassName=""
@@ -41,7 +41,6 @@ export default function RootLayout({
               toastOptions={{
                 // Define default options
                 className: "",
-                duration: 2000,
                 style: {
                   background: "#18181b",
                   color: "#fff",
@@ -51,6 +50,9 @@ export default function RootLayout({
                 // Default options for specific types
                 success: {
                   duration: 3000,
+                },
+                loading: {
+                  duration: 10000,
                 },
                 iconTheme: {
                   primary: "green",

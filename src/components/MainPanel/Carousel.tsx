@@ -2,6 +2,7 @@ import { useGlobal } from "@/drivers/GlobalContext";
 import { Button, Card, CardBody, CardFooter, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image } from "@nextui-org/react";
 import styles from "../MainPanel.module.css";
 import { usePathname } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function Carousel(props: { title: string; folder: string }) {
   // Global States
@@ -26,7 +27,7 @@ export default function Carousel(props: { title: string; folder: string }) {
               onPress={() => {
                 if (path === "/") return;
                 setOpenedFileId(file.id);
-                setToolbarMode("normal")
+                setToolbarMode("normal");
                 onOpen();
               }}
               contextMenu="true"
@@ -50,7 +51,11 @@ export default function Carousel(props: { title: string; folder: string }) {
                 aria-label="Dropdown menu"
                 onAction={(key) => {
                   if (key === "delete") {
-                    removeFile(file.id, folder);
+                    toast.promise(removeFile(file.id, folder), {
+                      loading: "Deleting...",
+                      success: "Deleted!",
+                      error: "Failed to delete",
+                    });
                   }
                 }}>
                 <DropdownItem key="delete" className="text-danger" color="danger">

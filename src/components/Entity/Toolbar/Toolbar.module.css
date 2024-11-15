@@ -10,16 +10,21 @@
 }
 
 .toolBtn {
-  @apply flex justify-center items-center;
+  @apply grid place-items-center;
   @apply aspect-square p-0 m-0 min-w-0 h-9;
   @apply rounded-lg;
 }
 .toolBtn > img {
-  @apply size-[75%];
+  @apply size-[85%];
 }
 
 .saveBtn {
-  @apply flex justify-center items-center;
-  @apply aspect-square w-16 p-0 m-0 min-w-0 h-9;
-  @apply rounded-lg;
+  @apply toolBtn w-16;
+}
+
+.cancelBtn {
+  @apply toolBtn;
+}
+.cancelBtn > img {
+  @apply rotate-45;
 }

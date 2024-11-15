@@ -17,7 +17,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   // Refs
   const currImgRef = useRef<HTMLImageElement>(null);
   // NextUI modal
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   // Toolbar states
   const [toolbarMode, setToolbarMode] = useState<toolbarModeType>("normal");
@@ -25,19 +25,23 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   const path = usePathname();
 
   // Auth logout
-  const logout = async () => {
-    // Sign out from next-auth
-    signOut();
-    setUser(() => ({ loggedIn: false }));
-    setFiles([]);
+  const logout = () => {
+    try {
+      // Sign out from next-auth
+      signOut();
+      setUser(() => ({ loggedIn: false }));
+      setFiles([]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // Auth login
-  const login = async () => {
+  const login = async (): Promise<void> => {
     try {
       const result = await signIn("google", { redirect: false, callbackUrl: "/" });
       if (result?.error) {
-        console.error(result.error);
+        throw new Error(result.error);
       }
     } catch (error) {
       console.error(error);
@@ -45,25 +49,22 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   };
 
   // Maintain directory structure
-  const initUserDirective = async (doListFiles: boolean) => {
-    setTimeout(async () => {
-      try {
-        const response = await fetch("/api/init_user", { method: "POST" });
-        const responseJson = await response.json();
-        console.log(responseJson);
+  const initUserDirective = async (doListFiles: boolean): Promise<void> => {
+    try {
+      const response = await fetch("/api/init_user", { method: "POST" });
+      const responseJson = await response.json();
+      console.log(responseJson);
 
-        if (doListFiles)
-          setTimeout(async () => {
-            await listFiles();
-          }, 1000);
-      } catch (error) {
-        console.log(error);
+      if (doListFiles) {
+        await listFiles();
       }
-    }, 1000);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // List all files
-  const listFiles = async () => {
+  const listFiles = async (): Promise<void> => {
     try {
       const response = await fetch("/api/list_files", {
         method: "POST",
@@ -81,12 +82,12 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       );
       setFiles(filesLocal);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
   // Download file
-  const downFile = async (id: string) => {
+  const downFile = async (id: string): Promise<string | undefined> => {
     const existingFile = files.find((file) => file.id === id);
     if (existingFile?.blobURL) return existingFile.blobURL;
     try {
@@ -110,7 +111,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   };
 
   // Create file
-  const createFile = async (file: File, folder: string) => {
+  const createFile = async (file: File, folder: string): Promise<void> => {
     try {
       const payload = new FormData();
       payload.append("name", file.name);
@@ -122,14 +123,15 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       });
       const responseJson = await response.json();
       console.log(responseJson);
-      listFiles();
+      await listFiles();
     } catch (error) {
       console.log(error);
+      throw error;
     }
   };
 
   // Remove file
-  const removeFile = async (id: string, folder: string) => {
+  const removeFile = async (id: string, folder: string): Promise<void> => {
     try {
       const response = await fetch("/api/remove_file", {
         method: "POST",
@@ -137,14 +139,14 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       });
       const responseJson = await response.json();
       console.log(responseJson);
-      listFiles();
+      await listFiles();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
   // Crop image
-  const cropImage = async (id: string, crop: Crop) => {
+  const cropImage = async (id: string, crop: Crop): Promise<string> => {
     try {
       const response = await fetch("/api/crop_file", {
         method: "POST",
@@ -152,39 +154,38 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       });
       if (response.status !== 200) {
         const responseJson = await response.json();
-        console.log(responseJson);
-      } else {
-        const arrayBuffer = await response.arrayBuffer();
-        const contentType = response.headers.get("Content-Type") || "application/octet-stream";
-        const responseBlob = new Blob([arrayBuffer], { type: contentType });
-        const responseBlobURL = URL.createObjectURL(responseBlob);
-        return responseBlobURL;
+        console.error(responseJson);
+        throw new Error(responseJson);
       }
+      const arrayBuffer = await response.arrayBuffer();
+      const contentType = response.headers.get("Content-Type") || "application/octet-stream";
+      const responseBlob = new Blob([arrayBuffer], { type: contentType });
+      return URL.createObjectURL(responseBlob);
     } catch (error) {
-      console.log(error);
-      return "";
+      console.error(error);
+      throw error;
     }
   };
 
   // Get file metadata
-  const getFile = async (id: string) => {
-    try {
-      const response = await fetch("/api/get_file", {
-        method: "POST",
-        body: JSON.stringify({ id }),
-      });
-      if (response.status !== 200) {
-        const responseJson = await response.json();
-        console.log(responseJson);
-        return null;
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
+  // const getFile = async (id: string) => {
+  //   try {
+  //     const response = await fetch("/api/get_file", {
+  //       method: "POST",
+  //       body: JSON.stringify({ id }),
+  //     });
+  //     if (response.status !== 200) {
+  //       const responseJson = await response.json();
+  //       console.log(responseJson);
+  //       return null;
+  //     }
+  //     const data = await response.json();
+  //     return data;
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null;
+  //   }
+  // };
 
   // Load state from local storage on reload
   useEffect(() => {
@@ -234,6 +235,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     isOpen,
     onOpen,
     onOpenChange,
+    onClose,
     openedFileId,
     setOpenedFileId,
     downFile,
@@ -241,7 +243,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     toolbarMode,
     setToolbarMode,
     cropImage,
-    getFile,
+    // getFile,
     currFolder,
     setCurrFolder,
   };
@@ -260,22 +262,23 @@ export interface Values {
   user: Record<string, any>;
   files: Array<fileObj>;
   logout: () => void;
-  login: () => void;
-  listFiles: () => void;
-  createFile: (file: File, folder: string) => void;
-  removeFile: (id: string, folder: string) => void;
-  initUserDirective: (doListFiles: boolean) => void;
+  login: () => Promise<void>;
+  listFiles: () => Promise<void>;
+  createFile: (file: File, folder: string) => Promise<void>;
+  removeFile: (id: string, folder: string) => Promise<void>;
+  initUserDirective: (doListFiles: boolean) => Promise<void>;
+  downFile: (id: string) => Promise<string | undefined>;
+  cropImage: (id: string, crop: Crop) => Promise<string>;
+  // getFile: (id: string) => Promise<any | null>;
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
+  onClose: () => void;
   openedFileId: string;
   setOpenedFileId: React.Dispatch<React.SetStateAction<string>>;
-  downFile: (id: string) => Promise<string | undefined>;
   currImgRef?: React.MutableRefObject<HTMLImageElement | null>;
   toolbarMode: toolbarModeType;
   setToolbarMode: React.Dispatch<React.SetStateAction<toolbarModeType>>;
-  cropImage: (id: string, crop: Crop) => Promise<string | undefined>;
-  getFile: (id: string) => Promise<any | null>;
   currFolder: currFolderType;
   setCurrFolder: React.Dispatch<React.SetStateAction<currFolderType>>;
 }

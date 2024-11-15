@@ -10,10 +10,10 @@ export async function POST(request: Request) {
 
     const croppedBuffer = await sharp(arrayBuffer)
       .extract({
-        width: Math.floor(crop.width),
-        height: Math.floor(crop.height),
-        left: Math.floor(crop.x),
-        top: Math.floor(crop.y),
+        width: Math.round(crop.width),
+        height: Math.round(crop.height),
+        left: Math.round(crop.x),
+        top: Math.round(crop.y),
       })
       .toBuffer();
     const croppedArrayBuffer = croppedBuffer.buffer.slice(croppedBuffer.byteOffset, croppedBuffer.byteOffset + croppedBuffer.byteLength);

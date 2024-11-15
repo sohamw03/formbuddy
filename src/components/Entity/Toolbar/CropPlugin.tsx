@@ -1,11 +1,9 @@
-import { useGlobal } from "@/drivers/GlobalContext";
-import { cn } from "@nextui-org/react";
-import ReactCrop, { type Crop, type PixelCrop, type PercentCrop } from "react-image-crop";
+import { useEffect, useState } from "react";
+import ReactCrop, { type Crop, type PercentCrop, type PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import EntityStyles from "../Entity.module.css";
-import { useEffect, useState } from "react";
 
-export default function CropPlugin({ isOpen, src, crop, setCrop, percentCrop, setPercentCrop }: { isOpen: boolean; src: string; crop: Crop | undefined; setCrop: React.Dispatch<React.SetStateAction<Crop | undefined>>; percentCrop: Crop | undefined; setPercentCrop: React.Dispatch<React.SetStateAction<Crop | undefined>> }) {
+export default function CropPlugin({ isOpen, src, crop, setCrop, percentCrop, setPercentCrop, calcImgStyle }: { isOpen: boolean; src: string; crop: Crop | undefined; setCrop: React.Dispatch<React.SetStateAction<Crop | undefined>>; percentCrop: Crop | undefined; setPercentCrop: React.Dispatch<React.SetStateAction<Crop | undefined>>; calcImgStyle: string }) {
   if (!isOpen) return null;
 
   const [localCrop, setLocalCrop] = useState<Crop>();
@@ -21,13 +19,14 @@ export default function CropPlugin({ isOpen, src, crop, setCrop, percentCrop, se
   }, []);
 
   return (
-    <div className={cn(EntityStyles.modalBody, "flex justify-center w-full")}>
+    <div className={EntityStyles.modalBody}>
       <ReactCrop //
+        className={calcImgStyle}
         crop={localCrop}
         onChange={(c) => setLocalCrop(c)}
         onComplete={onComplete}
         ruleOfThirds>
-        <img src={src} className={cn(EntityStyles.image, "w-full")} />
+        <img src={src} className={calcImgStyle} />
       </ReactCrop>
     </div>
   );

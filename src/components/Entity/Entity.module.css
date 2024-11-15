@@ -1,14 +1,20 @@
 .modalBody {
-  @apply p-0 m-0 relative;
+  @apply grid place-items-center w-full p-0 m-0 relative;
+  @apply flex-none;
+  height: 35rem;
 }
+
 .modalBody::before {
   content: " ";
   @apply absolute inset-0 -z-[1] backdrop-brightness-75;
 }
 
 .image {
-  @apply object-contain;
-  height: 35rem;
+  @apply w-full !max-h-[35rem];
+}
+
+.imageVert {
+  @apply h-full !max-h-[35rem];
 }
 
 .header {

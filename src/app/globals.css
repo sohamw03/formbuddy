@@ -16,7 +16,13 @@
   }
 }
 
-body {}
+body {
+}
+
+.ReactCrop__child-wrapper {
+  height: inherit;
+  width: inherit;
+}
 
 @layer utilities {
   .text-balance {
