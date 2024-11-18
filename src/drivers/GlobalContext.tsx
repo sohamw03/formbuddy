@@ -71,16 +71,18 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       });
       const responseJson = await response.json();
       const filesLocal = await Promise.all(
-        responseJson.files.map(async (file: any) => ({
+        responseJson.files.map(async (file: fileObj) => ({
           name: file.name,
           id: file.id,
           mimeType: file.mimeType,
           parents: file.parents,
           thumbnailLink: file.thumbnailLink,
           blobURL: `${file.mimeType.includes("image") ? await downFile(file.id) : ""}`,
+          variants: file.variants,
         }))
       );
       setFiles(filesLocal);
+      console.log({ filesLocal });
     } catch (error) {
       console.error(error);
     }
@@ -111,12 +113,13 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   };
 
   // Create file
-  const createFile = async (file: File, folder: string): Promise<void> => {
+  const createFile = async (file: File, folder: string, isVariant?: boolean): Promise<void> => {
     try {
       const payload = new FormData();
       payload.append("name", file.name);
       payload.append("content", file);
       payload.append("folder_id", `${files.find((file) => file.name === folder && file.mimeType === "application/vnd.google-apps.folder")?.id}`);
+      payload.append("is_variant", `${isVariant}`);
       const response = await fetch("/api/create_file", {
         method: "POST",
         body: payload,
@@ -264,7 +267,7 @@ export interface Values {
   logout: () => void;
   login: () => Promise<void>;
   listFiles: () => Promise<void>;
-  createFile: (file: File, folder: string) => Promise<void>;
+  createFile: (file: File, folder: string, isVariant?: boolean) => Promise<void>;
   removeFile: (id: string, folder: string) => Promise<void>;
   initUserDirective: (doListFiles: boolean) => Promise<void>;
   downFile: (id: string) => Promise<string | undefined>;
@@ -290,4 +293,5 @@ export type fileObj = {
   parents: string[];
   thumbnailLink: string;
   blobURL: string;
+  variants: string[];
 };

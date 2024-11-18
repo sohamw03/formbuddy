@@ -82,7 +82,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                               console.log(newBlobURL);
                               // Create a new file object for the cropped image
                               const variant = {
-                                name: fileState.file.name.replace(/(\.[^.]+)$/, ` [${res.width}x${res.height}]$1`),
+                                name: fileState.file.name,
                                 id: "",
                                 mimeType: fileState.file.mimeType,
                                 parents: fileState.file.parents,
@@ -142,7 +142,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                               const blob = await response.blob();
                               const croppedFile = new File([blob], fileState.file.name, { type: blob.type });
                               // Send the cropped file to the backend
-                              await createFile(croppedFile, currFolder);
+                              await createFile(croppedFile, currFolder, true);
                               resolve();
                             } catch (error) {
                               reject(error);
