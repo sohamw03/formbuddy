@@ -70,7 +70,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
         method: "POST",
       });
       const responseJson = await response.json();
-      const filesLocal = await Promise.all(
+      let filesLocal = (await Promise.all(
         responseJson.files.map(async (file: fileObj) => ({
           name: file.name,
           id: file.id,
@@ -80,9 +80,24 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
           blobURL: `${file.mimeType.includes("image") ? await downFile(file.id) : ""}`,
           variants: file.variants,
         }))
-      );
-      setFiles(filesLocal);
+      )) as fileObj[];
+
+      // Create a tree structure for the files
+      let fileObjsToDelete: string[] = [];
+      filesLocal.map((file) => {
+        if (file.variants.length > 0) {
+          file.children = file.variants.map((variant) => {
+            const variantObj = filesLocal.find((file) => file.id === variant);
+            return variantObj as fileObj;
+          });
+          fileObjsToDelete.push(...file.variants);
+        }
+      });
+      // Remove the variants from the main files array
+      filesLocal = filesLocal.filter((file) => !fileObjsToDelete.includes(file.id));
+
       console.log({ filesLocal });
+      setFiles(filesLocal);
     } catch (error) {
       console.error(error);
     }
@@ -90,7 +105,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
 
   // Download file
   const downFile = async (id: string): Promise<string | undefined> => {
-    const existingFile = files.find((file) => file.id === id);
+    const existingFile = files.find((file) => file.id === id || file.variants.includes(id));
     if (existingFile?.blobURL) return existingFile.blobURL;
     try {
       const response = await fetch("/api/down_file", {
@@ -294,4 +309,5 @@ export type fileObj = {
   thumbnailLink: string;
   blobURL: string;
   variants: string[];
+  children?: fileObj[];
 };

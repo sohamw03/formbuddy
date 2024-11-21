@@ -9,8 +9,8 @@ export async function POST(request: Request) {
     const consFiles = files?.map((file: drive_v3.Schema$File) => {
       // Files that do not have _r_1920x1080 in their name are considered the original file
       let variants: string[] = [];
-      if (!file.name?.match(/_r_\d+x\d+\.(\w+)$/)) {
-        variants = files.filter((f) => f.name?.startsWith(file.name as string) && f.name !== file.name && f.name?.match(/_r_\d+x\d+\.(\w+)$/)).map((f) => f.id as string);
+      if (!file.name?.match(/_r_\d+x\d+\.(\w+)$/) && file.mimeType?.includes("image")) {
+        variants = files.filter((f) => f.name?.includes(file.name?.split(".").slice(0, -1).join(".") as string) && f.name !== file.name && f.name?.match(/_r_\d+x\d+\.(\w+)$/)).map((f) => f.id as string);
       }
       const consFile = { ...file, variants };
       return consFile as File;

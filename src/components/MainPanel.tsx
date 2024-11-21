@@ -17,7 +17,7 @@ const folderMap: Record<string, string> = {
 
 export default function MainPanel(props: { page: string }) {
   // Global States
-  const { user, files, initUserDirective, createFile, listFiles } = useGlobal();
+  const { user, initUserDirective, listFiles } = useGlobal();
   // Props
   const { page } = props;
 
