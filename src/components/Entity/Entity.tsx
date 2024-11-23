@@ -9,17 +9,31 @@ import Toolbar from "./Toolbar/Toolbar";
 export default function Entity() {
   // Global context
   const { isOpen, onOpenChange, files, openedFileId, currImgRef, toolbarMode } = useGlobal();
-  // Local state
-  const [file, setFile] = useState<fileObj | undefined>(files.find((file) => file.id === openedFileId));
-  // const [file, setFile] = useState<fileObj | undefined>({ name: "image.jpg", blobURL: "https://gratisography.com/wp-content/uploads/2024/10/gratisography-cool-cat-800x525.jpg", id: "cgsciac", mimeType: "image/jpg", parents: [""], thumbnailLink: "" });
   const [resolution, setResolution] = useState({ width: 0, height: 0 });
   // Crop plugin states
   const [crop, setCrop] = useState<Crop>();
   const [percentCrop, setPercentCrop] = useState<Crop>();
 
+  // Get the file to show
+  const getFileToShow = () => {
+    let fileToShow: fileObj | undefined;
+    files.forEach((file) => {
+      file.children?.forEach((child) => {
+        if (child.id === openedFileId) {
+          fileToShow = child;
+        }
+      });
+    });
+    if (!fileToShow) {
+      fileToShow = files.find((file) => file.id === openedFileId);
+    }
+    return fileToShow;
+  };
+  const [file, setFile] = useState<fileObj | undefined>();
   useEffect(() => {
-    setFile(files.find((file) => file.id === openedFileId));
+    setFile(getFileToShow());
   }, [openedFileId, files]);
+  // const [file, setFile] = useState<fileObj | undefined>({ name: "image.jpg", blobURL: "https://gratisography.com/wp-content/uploads/2024/10/gratisography-cool-cat-800x525.jpg", id: "cgsciac", mimeType: "image/jpg", parents: [""], thumbnailLink: "" });
 
   // Extract resolution of the image when it is loaded
   const extractResolution = () => {
