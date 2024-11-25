@@ -3,24 +3,28 @@ import { downFile } from "../down_file/route";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { id, crop } = body;
+  const { id, quality } = body;
+
+  const imageQuality = Math.min(Math.max(quality || 80, 1), 100);
+
   try {
     const response = (await downFile(id)) as Blob;
     const arrayBuffer = await response.arrayBuffer();
 
-    const croppedBuffer = await sharp(arrayBuffer)
-      .extract({
-        width: Math.round(crop.width),
-        height: Math.round(crop.height),
-        left: Math.round(crop.x),
-        top: Math.round(crop.y),
+    const processedBuffer = await sharp(arrayBuffer)
+      .jpeg({
+        quality: imageQuality,
+        chromaSubsampling: "4:4:4",
+        trellisQuantisation: true,
+        overshootDeringing: true,
+        optimizeScans: true,
       })
       .toBuffer();
-    const croppedArrayBuffer = croppedBuffer.buffer.slice(croppedBuffer.byteOffset, croppedBuffer.byteOffset + croppedBuffer.byteLength);
+    const processedArrayBuffer = processedBuffer.buffer.slice(processedBuffer.byteOffset, processedBuffer.byteOffset + processedBuffer.byteLength);
 
     const headers = new Headers();
     headers.set("Content-Type", response?.type! || "application/octet-stream");
-    return new Response(croppedArrayBuffer, { status: 200, statusText: "OK", headers });
+    return new Response(processedArrayBuffer, { status: 200, statusText: "OK", headers });
   } catch (error) {
     console.log(error);
     return Response.json({ status: false, message: "Error fetching content." }, { status: 500 });
