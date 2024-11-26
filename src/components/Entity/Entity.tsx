@@ -33,7 +33,7 @@ export default function Entity() {
   useEffect(() => {
     setFile(getFileToShow());
   }, [openedFileId, files]);
-  // const [file, setFile] = useState<fileObj | undefined>({ name: "image.jpg", blobURL: "https://gratisography.com/wp-content/uploads/2024/10/gratisography-cool-cat-800x525.jpg", id: "cgsciac", mimeType: "image/jpg", parents: [""], thumbnailLink: "" });
+  // const [file, setFile] = useState<fileObj | undefined>({ name: "image.jpg", blobURL: "https://gratisography.com/wp-content/uploads/2024/10/gratisography-cool-cat-800x525.jpg", id: "cgsciac", mimeType: "image/jpg", parents: [""], thumbnailLink: "", variants: [] });
 
   // Extract resolution of the image when it is loaded
   const extractResolution = () => {

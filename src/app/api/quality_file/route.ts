@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { id, quality } = body;
 
-  const imageQuality = Math.min(Math.max(quality || 80, 1), 100);
+  const imageQuality = Math.round(Math.max(0, Math.min(quality, 100)));
 
   try {
     const response = (await downFile(id)) as Blob;

@@ -1,5 +1,5 @@
 import { type fileObj, useGlobal } from "@/drivers/GlobalContext";
-import { Button } from "@nextui-org/react";
+import { Button, Input, Popover, PopoverContent, PopoverTrigger, Slider, SliderValue } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import styles from "./Toolbar.module.css";
 import { type Crop } from "react-image-crop";
@@ -15,6 +15,8 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
   const [cropDisabled, setCropDisabled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
+  const [quality, setQuality] = useState<SliderValue>(100);
+
   // Update engine
   useEffect(() => {
     switch (toolbarMode) {
@@ -29,6 +31,12 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
         break;
     }
   }, [crop, percentCrop, toolbarMode, resolution]);
+
+  const resolutionBlock = (
+    <div style={{ justifySelf: "center", height: "100%", alignContent: "center" }}>
+      {res.width} x {res.height}
+    </div>
+  );
 
   return (
     <div onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} style={{ background: "inherit" }}>
@@ -46,13 +54,29 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
               case "normal":
                 return (
                   <>
-                    <div className="ps-2" style={{ justifySelf: "start" }}>
-                      100%
+                    <div style={{ justifySelf: "start", height: "100%" }}>
+                      <Popover placement="top-start" showArrow offset={10} style={{ width: "15rem" }}>
+                        <PopoverTrigger>
+                          <Button className={styles.qualityBtn} variant="flat" style={{ justifySelf: "start" }}>
+                            {quality}%
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          {(titleProps) => (
+                            <div className="px-1 py-2 w-full">
+                              <p className="text-small font-bold text-foreground" {...titleProps}>
+                                Quality
+                              </p>
+                              <div className="mt-2 flex flex-col gap-2 w-full">
+                                <Slider step={1} maxValue={100} minValue={0} defaultValue={100} size="md" color="foreground" showTooltip className="max-w-md" value={quality} onChange={setQuality} onDoubleClick={() => setQuality(100)} />
+                              </div>
+                            </div>
+                          )}
+                        </PopoverContent>
+                      </Popover>
                     </div>
-                    <div style={{ justifySelf: "center" }}>
-                      {res.width} x {res.height}
-                    </div>
-                    <div>
+                    {resolutionBlock}
+                    <div style={{ height: "100%" }}>
                       <Button className={styles.toolBtn} variant="flat" onClick={() => setToolbarMode("crop")} style={{ justifySelf: "end" }} disabled={cropDisabled}>
                         <img src="/icons/crop_icon.svg" alt="crop" />
                       </Button>
@@ -62,15 +86,13 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
               case "crop":
                 return (
                   <>
-                    <div style={{ justifySelf: "start" }}>
+                    <div style={{ justifySelf: "start", height: "100%" }}>
                       <Button className={styles.cancelBtn} variant="flat" onClick={() => setToolbarMode("normal")}>
                         <img src="/icons/plus_icon.svg" alt="close" />
                       </Button>
                     </div>
-                    <div style={{ justifySelf: "center" }}>
-                      {res.width} x {res.height}
-                    </div>
-                    <div style={{ justifySelf: "end" }}>
+                    {resolutionBlock}
+                    <div style={{ justifySelf: "end", height: "100%" }}>
                       <Button
                         className={styles.toolBtn}
                         variant="flat"
@@ -122,7 +144,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
               case "cropped":
                 return (
                   <>
-                    <div style={{ justifySelf: "start" }}>
+                    <div style={{ justifySelf: "start", height: "100%" }}>
                       <Button
                         className={styles.cancelBtn}
                         variant="flat"
@@ -133,10 +155,8 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                         <img src="/icons/plus_icon.svg" alt="close" />
                       </Button>
                     </div>
-                    <div style={{ justifySelf: "center" }}>
-                      {res.width} x {res.height}
-                    </div>
-                    <div style={{ justifySelf: "end" }}>
+                    {resolutionBlock}
+                    <div style={{ justifySelf: "end", height: "100%" }}>
                       <Button
                         className={styles.saveBtn}
                         variant="flat"

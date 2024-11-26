@@ -1,9 +1,18 @@
+import { auth } from "../auth/[...nextauth]/route";
 import { createFolder } from "../create_folder/route";
 import { listFiles } from "../list_files/route";
 import { removeFile } from "../remove_file/route";
 
 export async function POST(request: Request) {
   try {
+    const session = await auth();
+    if (!session) {
+      return Response.json(
+        { status: false, message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     // Call the list api to check if folders exist (photos, docs, and signatures)
     let files = (await listFiles()) as { id: string; name: string; mimeType: string; parents: string[] }[];
 

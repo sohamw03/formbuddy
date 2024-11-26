@@ -1,7 +1,7 @@
 .toolbar {
   @apply flex justify-center items-center;
   @apply absolute bottom-5 left-1/2 transform -translate-x-1/2;
-  @apply bg-inherit backdrop-brightness-50 rounded-lg p-2 w-3/4 h-14 shadow-sm;
+  @apply bg-inherit backdrop-brightness-50 rounded-2xl p-[6px] w-3/4 h-14 shadow-sm;
 }
 
 .toolbarInWrapper {
@@ -11,8 +11,8 @@
 
 .toolBtn {
   @apply grid place-items-center;
-  @apply aspect-square p-0 m-0 min-w-0 h-9;
-  @apply rounded-lg;
+  @apply aspect-square p-0 m-0 min-w-0 h-full rounded-[10px];
+  @apply text-base;
 }
 .toolBtn > img {
   @apply size-[85%];
@@ -27,4 +27,8 @@
 }
 .cancelBtn > img {
   @apply rotate-45;
+}
+
+.qualityBtn {
+  @apply toolBtn w-16;
 }
