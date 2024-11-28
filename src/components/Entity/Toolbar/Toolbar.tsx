@@ -1,10 +1,10 @@
 import { type fileObj, useGlobal } from "@/drivers/GlobalContext";
-import { Button, Input, Popover, PopoverContent, PopoverTrigger, Slider, SliderValue } from "@nextui-org/react";
+import { Button, Popover, PopoverContent, PopoverTrigger, Slider, SliderValue, Link } from "@nextui-org/react";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import styles from "./Toolbar.module.css";
-import { type Crop } from "react-image-crop";
 import toast from "react-hot-toast";
-import { motion, AnimatePresence } from "framer-motion";
+import { type Crop } from "react-image-crop";
+import styles from "./Toolbar.module.css";
 
 export default function Toolbar({ resolution, crop, percentCrop, fileState }: { resolution: { width: number; height: number }; crop: Crop | undefined; fileState: { file: fileObj; setFile: React.Dispatch<React.SetStateAction<fileObj | undefined>> }; percentCrop: Crop | undefined }) {
   // Global states
@@ -70,6 +70,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                               <div className="mt-2 flex flex-col gap-2 w-full">
                                 <Slider step={1} maxValue={100} minValue={0} defaultValue={100} size="md" color="foreground" showTooltip className="max-w-md" value={quality} onChange={setQuality} onDoubleClick={() => setQuality(100)} />
                               </div>
+                              <Link className="cursor-pointer" onClick={() => { setQuality(100); }} underline="always" size="sm"><span>Reset</span></Link>
                             </div>
                           )}
                         </PopoverContent>

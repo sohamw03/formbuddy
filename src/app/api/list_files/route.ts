@@ -5,15 +5,33 @@ export async function POST(request: Request) {
   try {
     const files = (await listFiles()) as drive_v3.Schema$File[];
 
-    // Consolidate the files by adding the variants
     const consFiles = files?.map((file: drive_v3.Schema$File) => {
-      // Files that do not have _r_1920x1080 in their name are considered the original file
-      let variants: string[] = [];
-      if (!file.name?.match(/_r_\d+x\d+\.(\w+)$/) && file.mimeType?.includes("image")) {
-        variants = files.filter((f) => f.name?.includes(file.name?.split(".").slice(0, -1).join(".") as string) && f.name !== file.name && f.name?.match(/_r_\d+x\d+\.(\w+)$/)).map((f) => f.id as string);
+      let resolutionVariants: string[] = [];
+      let qualityVariants: string[] = [];
+
+      if (!file.name?.match(/(_r_\d+x\d+|_q_\d+)\.(\w+)$/) && file.mimeType?.includes("image")) {
+        const baseFileName = file.name?.split(".").slice(0, -1).join(".");
+
+        // Find resolution variants
+        resolutionVariants = files
+          .filter((f) => f.name?.includes(baseFileName as string) &&
+                        f.name !== file.name &&
+                        f.name?.match(/_r_\d+x\d+\.(\w+)$/))
+          .map((f) => f.id as string);
+
+        // Find quality variants
+        qualityVariants = files
+          .filter((f) => f.name?.includes(baseFileName as string) &&
+                        f.name !== file.name &&
+                        f.name?.match(/_q_\d+\.(\w+)$/))
+          .map((f) => f.id as string);
       }
-      const consFile = { ...file, variants };
-      return consFile as File;
+
+      return {
+        ...file,
+        resolutionVariants,
+        qualityVariants
+      } as File;
     });
 
     return Response.json({ status: true, files: consFiles });
@@ -47,7 +65,8 @@ type File = {
   parents: string[];
   thumbnailLink: string;
   blobURL: string;
-  variants: string[];
+  resolutionVariants: string[];
+  qualityVariants: string[];
 };
 
 // {

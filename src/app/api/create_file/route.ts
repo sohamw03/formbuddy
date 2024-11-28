@@ -4,15 +4,18 @@ import sharp from "sharp";
 
 export async function POST(request: Request) {
   const formData = await request.formData();
-  const { name, folder_id, content, is_variant } = Object.fromEntries(formData) as {
+  const { name, folder_id, content, is_reso_variant, is_qual_variant, quality } = Object.fromEntries(formData) as {
     name: string;
     folder_id: string;
     content: File;
-    is_variant: string;
+    is_reso_variant: string;
+    is_qual_variant: string;
+    quality?: string;
   };
+
   // Convert File object to a readable stream
   const arrayBuffer = await content.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
+  let buffer = Buffer.from(arrayBuffer);
   const readableStream = new Readable();
   readableStream._read = () => {}; // No-op
   readableStream.push(buffer);
@@ -20,15 +23,14 @@ export async function POST(request: Request) {
 
   // Deconflict file name with different resolution naming system; there shouldn't be _r_1920x1080 at the end of the file name
   let deconName = name;
-  if (name.match(/_r_\d+x\d+\.(\w+)$/)) {
-    deconName = name.split("_r_")[0] + "." + name.split(".").pop();
+  if (name.match(/(_r_\d+x\d+|_q_\d+)\.(\w+)$/)) {
+    deconName = name.split(/(_r_|_q_)/)[0] + "." + name.split(".").pop();
   }
 
-  // Check if the file is a variant
-  if (is_variant && is_variant === "true") {
-    // Extract the resolution from the file using sharp
-    const image = sharp(buffer);
-    const metadata = await image.metadata();
+  if (is_qual_variant === "true" && quality) {
+    deconName = deconName.split(".")[0] + `_q_${quality}.` + deconName.split(".").pop();
+  } else if (is_reso_variant === "true") {
+    const metadata = await sharp(buffer).metadata();
     const { width, height } = metadata;
     deconName = deconName.split(".")[0] + `_r_${width}x${height}.` + deconName.split(".").pop();
   }
@@ -49,10 +51,9 @@ export async function POST(request: Request) {
         media: media,
         fields: "id",
       });
-      console.log("File Id:", file.data.id);
+
       return Response.json({ id: file.data.id });
     } catch (err) {
-      // TODO(developer) - Handle error
       throw err;
     }
   }
