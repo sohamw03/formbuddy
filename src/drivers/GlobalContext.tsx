@@ -185,25 +185,6 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     }
   };
 
-  // Get file metadata
-  // const getFile = async (id: string) => {
-  //   try {
-  //     const response = await fetch("/api/get_file", {
-  //       method: "POST",
-  //       body: JSON.stringify({ id }),
-  //     });
-  //     if (response.status !== 200) {
-  //       const responseJson = await response.json();
-  //       console.log(responseJson);
-  //       return null;
-  //     }
-  //     const data = await response.json();
-  //     return data;
-  //   } catch (error) {
-  //     console.log(error);
-  //     return null;
-  //   }
-  // };
 
   // Load state from local storage on reload
   useEffect(() => {
@@ -287,7 +268,6 @@ export interface Values {
   initUserDirective: (doListFiles: boolean) => Promise<void>;
   downFile: (id: string) => Promise<string | undefined>;
   cropImage: (id: string, crop: Crop) => Promise<string>;
-  // getFile: (id: string) => Promise<any | null>;
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
