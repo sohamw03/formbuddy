@@ -12,6 +12,12 @@ const getResolution = (filename: string) => {
   return match ? match[1].replace("x", " x ") : "Original";
 };
 
+// Add this utility function next to getResolution
+const getQuality = (filename: string) => {
+  const match = filename.match(/_q_(\d+)/);
+  return match ? `${match[1]}% Quality` : "Original";
+};
+
 export default function Carousel(props: { title: string; folder: string }) {
   // Global States
   const { files, removeFile, onOpen, setOpenedFileId, setToolbarMode } = useGlobal();
@@ -91,10 +97,28 @@ export default function Carousel(props: { title: string; folder: string }) {
                       }));
                     }
                   }}>
-                  <DropdownSection title={undefined} items={[{ id: file.id, name: "Original" }].concat(file.children as Array<any>)}>
+                  <DropdownSection title={undefined}>
+                    <DropdownItem
+                      key={`variant_${file.id}`}
+                      className={selectedVariants[file.id] === file.id ? "text-primary-300" : ""}>
+                      Original
+                    </DropdownItem>
+                  </DropdownSection>
+                  <DropdownSection
+                    title="Resolution Variants"
+                    items={file.children?.filter(c => c.name.includes('_r_')) || []}>
                     {(variant) => (
                       <DropdownItem key={`variant_${variant.id}`} className={selectedVariants[file.id] === variant.id ? "text-primary-300" : ""}>
                         {getResolution(variant.name)}
+                      </DropdownItem>
+                    )}
+                  </DropdownSection>
+                  <DropdownSection
+                    title="Quality Variants"
+                    items={file.children?.filter(c => c.name.includes('_q_')) || []}>
+                    {(variant) => (
+                      <DropdownItem key={`variant_${variant.id}`} className={selectedVariants[file.id] === variant.id ? "text-primary-300" : ""}>
+                        {getQuality(variant.name)}
                       </DropdownItem>
                     )}
                   </DropdownSection>

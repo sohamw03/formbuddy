@@ -52,7 +52,7 @@ export default function RootLayout({
                   duration: 3000,
                 },
                 loading: {
-                  duration: 10000,
+                  duration: 30000,
                 },
                 iconTheme: {
                   primary: "green",

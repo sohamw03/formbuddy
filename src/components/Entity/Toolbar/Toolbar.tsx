@@ -5,17 +5,24 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { type Crop } from "react-image-crop";
 import styles from "./Toolbar.module.css";
+import { useDisclosure } from "@nextui-org/react";
 
 export default function Toolbar({ resolution, crop, percentCrop, fileState }: { resolution: { width: number; height: number }; crop: Crop | undefined; fileState: { file: fileObj; setFile: React.Dispatch<React.SetStateAction<fileObj | undefined>> }; percentCrop: Crop | undefined }) {
   // Global states
-  const { toolbarMode, setToolbarMode, cropImage, createFile, currFolder, onClose, files, openedFileId } = useGlobal();
+  const { toolbarMode, setToolbarMode, cropImage, qualImage, createFile, currFolder, onClose, files, openedFileId } = useGlobal();
   // Local state
   const [res, setRes] = useState(resolution);
   const [saveDisabled, setSaveDisabled] = useState(false);
   const [cropDisabled, setCropDisabled] = useState(false);
+  const [qualityDisabled, setQualityDisabled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const { isOpen: isQualityOpen, onOpenChange: onQualityOpenChange, onClose: onQualityClose } = useDisclosure();
 
   const [quality, setQuality] = useState<SliderValue>(100);
+
+  // Add these utility functions
+  const isQualityVariant = (filename: string) => filename.includes('_q_');
+  const isResolutionVariant = (filename: string) => filename.includes('_r_');
 
   // Update engine
   useEffect(() => {
@@ -32,9 +39,40 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
     }
   }, [crop, percentCrop, toolbarMode, resolution]);
 
+  const handleQualityChange = async () => {
+    if (isResolutionVariant(fileState.file.name)) return;
+    toast.promise(
+      new Promise<void>(async (resolve, reject) => {
+        try {
+          setQualityDisabled(true);
+          const newBlobURL = await qualImage(fileState.file.id, quality as number);
+          const variant = {
+            ...fileState.file,
+            id: "",
+            blobURL: newBlobURL,
+          } as fileObj;
+          fileState.setFile(variant);
+          setToolbarMode("qualled");
+          setQualityDisabled(false);
+          onQualityClose();
+          resolve();
+        } catch (error) {
+          setQualityDisabled(false);
+          console.error(error);
+          reject(error);
+        }
+      }),
+      {
+        loading: "Adjusting quality...",
+        success: `Quality set to ${quality}%`,
+        error: "Failed to change quality",
+      }
+    );
+  };
+
   const resolutionBlock = (
     <div style={{ justifySelf: "center", height: "100%", alignContent: "center" }}>
-      {res.width} x {res.height}
+      {toolbarMode === "qualled" ? `${quality}%` : `${res.width} x ${res.height}`}
     </div>
   );
 
@@ -55,9 +93,25 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                 return (
                   <>
                     <div style={{ justifySelf: "start", height: "100%" }}>
-                      <Popover placement="top-start" showArrow offset={10} style={{ width: "15rem" }}>
+                      <Popover
+                        placement="top-start"
+                        showArrow
+                        offset={10}
+                        style={{ width: "15rem" }}
+                        isOpen={isQualityOpen && !isResolutionVariant(fileState.file.name)}
+                        onOpenChange={(open) => {
+                          if (!isResolutionVariant(fileState.file.name)) {
+                            onQualityOpenChange();
+                          }
+                        }}
+                      >
                         <PopoverTrigger>
-                          <Button className={styles.qualityBtn} variant="flat" style={{ justifySelf: "start" }}>
+                          <Button
+                            className={styles.qualityBtn}
+                            variant="flat"
+                            style={{ justifySelf: "start" }}
+                            disabled={qualityDisabled || isResolutionVariant(fileState.file.name)}
+                          >
                             {quality}%
                           </Button>
                         </PopoverTrigger>
@@ -68,9 +122,20 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                                 Quality
                               </p>
                               <div className="mt-2 flex flex-col gap-2 w-full">
-                                <Slider step={1} maxValue={100} minValue={0} defaultValue={100} size="md" color="foreground" showTooltip className="max-w-md" value={quality} onChange={setQuality} onDoubleClick={() => setQuality(100)} />
+                                <Slider step={1} maxValue={100} minValue={1} defaultValue={100} size="md" color="foreground" showTooltip className="max-w-md" value={quality} onChange={setQuality} onDoubleClick={() => setQuality(100)} aria-label="Quality" label="Quality" isDisabled={isResolutionVariant(fileState.file.name)} />
                               </div>
-                              <Link className="cursor-pointer" onClick={() => { setQuality(100); }} underline="always" size="sm"><span>Reset</span></Link>
+                              <div className="flex justify-between mt-2">
+                                <Link className="cursor-pointer" onClick={() => { setQuality(100); }} underline="always" size="sm" isDisabled={isResolutionVariant(fileState.file.name)}>
+                                  <span>Reset</span>
+                                </Link>
+                                <Button
+                                  size="sm"
+                                  onClick={handleQualityChange}
+                                  disabled={qualityDisabled || isResolutionVariant(fileState.file.name)}
+                                >
+                                  Apply
+                                </Button>
+                              </div>
                             </div>
                           )}
                         </PopoverContent>
@@ -78,7 +143,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                     </div>
                     {resolutionBlock}
                     <div style={{ height: "100%" }}>
-                      <Button className={styles.toolBtn} variant="flat" onClick={() => setToolbarMode("crop")} style={{ justifySelf: "end" }} disabled={cropDisabled}>
+                      <Button className={styles.toolBtn} variant="flat" onClick={() => setToolbarMode("crop")} style={{ justifySelf: "end" }} disabled={cropDisabled || isQualityVariant(fileState.file.name)}>
                         <img src="/icons/crop_icon.svg" alt="crop" />
                       </Button>
                     </div>
@@ -172,7 +237,59 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                                 const blob = await response.blob();
                                 const croppedFile = new File([blob], fileState.file.name, { type: blob.type });
                                 // Send the cropped file to the backend
-                                await createFile(croppedFile, currFolder, true);
+                                await createFile(croppedFile, currFolder, {
+                                  isResolutionVariant: true
+                                });
+                                resolve();
+                              } catch (error) {
+                                reject(error);
+                              }
+                            }),
+                            {
+                              loading: "Saving...",
+                              success: "Saved!",
+                              error: "Failed to save.",
+                            }
+                          );
+                        }}
+                        disabled={saveDisabled}>
+                        Save
+                      </Button>
+                    </div>
+                  </>
+                );
+              case "qualled":
+                return (
+                  <>
+                    <div style={{ justifySelf: "start", height: "100%" }}>
+                      <Button
+                        className={styles.cancelBtn}
+                        variant="flat"
+                        onClick={() => {
+                          setToolbarMode("normal");
+                          fileState.setFile(files.find((file) => file.id === openedFileId));
+                        }}>
+                        <img src="/icons/plus_icon.svg" alt="close" />
+                      </Button>
+                    </div>
+                    {resolutionBlock}
+                    <div style={{ justifySelf: "end", height: "100%" }}>
+                      <Button
+                        className={styles.saveBtn}
+                        variant="flat"
+                        onClick={() => {
+                          toast.promise(
+                            new Promise<void>(async (resolve, reject) => {
+                              try {
+                                onClose();
+                                setSaveDisabled(true);
+                                const response = await fetch(fileState.file.blobURL);
+                                const blob = await response.blob();
+                                const qualledFile = new File([blob], fileState.file.name, { type: blob.type });
+                                await createFile(qualledFile, currFolder, {
+                                  isQualityVariant: true,
+                                  quality: quality as number
+                                });
                                 resolve();
                               } catch (error) {
                                 reject(error);

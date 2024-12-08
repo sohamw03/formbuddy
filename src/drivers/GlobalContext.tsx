@@ -129,13 +129,17 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   };
 
   // Create file
-  const createFile = async (file: File, folder: string, isVariant?: boolean): Promise<void> => {
+  const createFile = async (file: File, folder: string, options?: FileVariantOptions): Promise<void> => {
     try {
       const payload = new FormData();
       payload.append("name", file.name);
       payload.append("content", file);
       payload.append("folder_id", `${files.find((file) => file.name === folder && file.mimeType === "application/vnd.google-apps.folder")?.id}`);
-      payload.append("is_variant", `${isVariant}`);
+      payload.append("is_reso_variant", `${!!options?.isResolutionVariant}`);
+      payload.append("is_qual_variant", `${!!options?.isQualityVariant}`);
+      if (options?.quality) {
+        payload.append("quality", `${options.quality}`);
+      }
       const response = await fetch("/api/create_file", {
         method: "POST",
         body: payload,
@@ -186,6 +190,27 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     }
   };
 
+  // Quality image
+  const qualImage = async (id: string, quality: number): Promise<string> => {
+    try {
+      const response = await fetch("/api/quality_file", {
+        method: "POST",
+        body: JSON.stringify({ id: id, quality: quality }),
+      });
+      if (response.status !== 200) {
+        const responseJson = await response.json();
+        console.error(responseJson);
+        throw new Error(responseJson);
+      }
+      const arrayBuffer = await response.arrayBuffer();
+      const contentType = response.headers.get("Content-Type") || "application/octet-stream";
+      const responseBlob = new Blob([arrayBuffer], { type: contentType });
+      return URL.createObjectURL(responseBlob);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
 
   // Load state from local storage on reload
   useEffect(() => {
@@ -245,6 +270,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     cropImage,
     currFolder,
     setCurrFolder,
+    qualImage,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
@@ -255,7 +281,13 @@ export function useGlobal() {
 }
 
 type currFolderType = "home" | "photos" | "docs" | "signatures";
-type toolbarModeType = "crop" | "normal" | "cropped";
+type toolbarModeType = "crop" | "normal" | "cropped" | "qualled";
+
+export interface FileVariantOptions {
+  isResolutionVariant?: boolean;
+  isQualityVariant?: boolean;
+  quality?: number;
+}
 
 export interface Values {
   user: Record<string, any>;
@@ -263,7 +295,7 @@ export interface Values {
   logout: () => void;
   login: () => Promise<void>;
   listFiles: () => Promise<void>;
-  createFile: (file: File, folder: string, isVariant?: boolean) => Promise<void>;
+  createFile: (file: File, folder: string, options?: FileVariantOptions) => Promise<void>;
   removeFile: (id: string, folder: string) => Promise<void>;
   initUserDirective: (doListFiles: boolean) => Promise<void>;
   downFile: (id: string) => Promise<string | undefined>;
@@ -279,6 +311,7 @@ export interface Values {
   setToolbarMode: React.Dispatch<React.SetStateAction<toolbarModeType>>;
   currFolder: currFolderType;
   setCurrFolder: React.Dispatch<React.SetStateAction<currFolderType>>;
+  qualImage: (id: string, quality: number) => Promise<string>;
 }
 
 export type fileObj = {
