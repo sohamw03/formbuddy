@@ -78,19 +78,20 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
           parents: file.parents,
           thumbnailLink: file.thumbnailLink,
           blobURL: `${file.mimeType.includes("image") ? await downFile(file.id) : ""}`,
-          variants: file.variants,
+          resolutionVariants: file.resolutionVariants,
+          qualityVariants: file.qualityVariants,
         }))
       )) as fileObj[];
 
       // Create a tree structure for the files
       let fileObjsToDelete: string[] = [];
       filesLocal.map((file) => {
-        if (file.variants.length > 0) {
-          file.children = file.variants.map((variant) => {
+        if (file.resolutionVariants.length > 0 || file.qualityVariants.length > 0) {
+          file.children = file.resolutionVariants.concat(file.qualityVariants).map((variant) => {
             const variantObj = filesLocal.find((file) => file.id === variant);
             return variantObj as fileObj;
           });
-          fileObjsToDelete.push(...file.variants);
+          fileObjsToDelete.push(...file.resolutionVariants, ...file.qualityVariants);
         }
       });
       // Remove the variants from the main files array
@@ -105,7 +106,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
 
   // Download file
   const downFile = async (id: string): Promise<string | undefined> => {
-    const existingFile = files.find((file) => file.id === id || file.variants.includes(id));
+    const existingFile = files.find((file) => file.id === id || file.resolutionVariants.includes(id) || file.qualityVariants.includes(id));
     if (existingFile?.blobURL) return existingFile.blobURL;
     try {
       const response = await fetch("/api/down_file", {
@@ -242,7 +243,6 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     toolbarMode,
     setToolbarMode,
     cropImage,
-    // getFile,
     currFolder,
     setCurrFolder,
   };
@@ -288,6 +288,7 @@ export type fileObj = {
   parents: string[];
   thumbnailLink: string;
   blobURL: string;
-  variants: string[];
+  resolutionVariants: string[];
+  qualityVariants: string[];
   children?: fileObj[];
 };

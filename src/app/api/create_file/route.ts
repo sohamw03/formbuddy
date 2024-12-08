@@ -21,18 +21,24 @@ export async function POST(request: Request) {
   readableStream.push(buffer);
   readableStream.push(null); // End of stream
 
-  // Deconflict file name with different resolution naming system; there shouldn't be _r_1920x1080 at the end of the file name
+  // Improved regex to match both resolution and quality variants more precisely
   let deconName = name;
-  if (name.match(/(_r_\d+x\d+|_q_\d+)\.(\w+)$/)) {
-    deconName = name.split(/(_r_|_q_)/)[0] + "." + name.split(".").pop();
+  const variantRegex = /^(.+?)(?:_r_\d+x\d+|_q_\d+)?\.([^.]+)$/;
+  const match = name.match(variantRegex);
+
+  if (match) {
+    const [, baseName, extension] = match;
+    deconName = `${baseName}.${extension}`;
   }
 
   if (is_qual_variant === "true" && quality) {
-    deconName = deconName.split(".")[0] + `_q_${quality}.` + deconName.split(".").pop();
+    const [baseName, extension] = deconName.split('.');
+    deconName = `${baseName}_q_${quality}.${extension}`;
   } else if (is_reso_variant === "true") {
     const metadata = await sharp(buffer).metadata();
     const { width, height } = metadata;
-    deconName = deconName.split(".")[0] + `_r_${width}x${height}.` + deconName.split(".").pop();
+    const [baseName, extension] = deconName.split('.');
+    deconName = `${baseName}_r_${width}x${height}.${extension}`;
   }
 
   const service = await getDriveClient();

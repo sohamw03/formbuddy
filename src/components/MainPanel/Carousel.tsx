@@ -45,7 +45,7 @@ export default function Carousel(props: { title: string; folder: string }) {
       {title !== "" && <h2 className={styles.heading2}>{title}</h2>}
       <div className={styles.cardWrapper}>
         {filesToShow.map((file) => {
-          const fileVariant = file.children?.find((f) => f.id === selectedVariants[file.id]) as fileObj || file;
+          const fileVariant = (file.children?.find((f) => f.id === selectedVariants[file.id]) as fileObj) || file;
           return (
             <div key={file.id} className="relative">
               <Card
