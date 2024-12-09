@@ -15,7 +15,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
   const [saveDisabled, setSaveDisabled] = useState(false);
   const [cropDisabled, setCropDisabled] = useState(false);
   const [qualityDisabled, setQualityDisabled] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isHovered, setIsHovered] = useState(true);
   const { isOpen: isQualityOpen, onOpenChange: onQualityOpenChange, onClose: onQualityClose } = useDisclosure();
 
   const [quality, setQuality] = useState<SliderValue>(100);
@@ -53,6 +53,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
           } as fileObj;
           fileState.setFile(variant);
           setToolbarMode("qualled");
+          setIsHovered(true);
           setQualityDisabled(false);
           onQualityClose();
           resolve();
@@ -98,9 +99,9 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                         showArrow
                         offset={10}
                         style={{ width: "15rem" }}
-                        isOpen={isQualityOpen && !isResolutionVariant(fileState.file.name)}
+                        isOpen={isQualityOpen && !isResolutionVariant(fileState.file.name) && !isQualityVariant(fileState.file.name)}
                         onOpenChange={(open) => {
-                          if (!isResolutionVariant(fileState.file.name)) {
+                          if (!isResolutionVariant(fileState.file.name) && !isQualityVariant(fileState.file.name)) {
                             onQualityOpenChange();
                           }
                         }}
@@ -110,7 +111,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                             className={styles.qualityBtn}
                             variant="flat"
                             style={{ justifySelf: "start" }}
-                            disabled={qualityDisabled || isResolutionVariant(fileState.file.name)}
+                            disabled={qualityDisabled || isResolutionVariant(fileState.file.name) || isQualityVariant(fileState.file.name)}
                           >
                             {quality}%
                           </Button>
@@ -188,6 +189,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                                 } as unknown as fileObj;
                                 fileState.setFile(variant);
                                 setToolbarMode("cropped");
+                                setIsHovered(true);
                                 setCropDisabled(false);
                                 resolve();
                               } catch (error) {
@@ -267,6 +269,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                         variant="flat"
                         onClick={() => {
                           setToolbarMode("normal");
+                          setQuality(100);
                           fileState.setFile(files.find((file) => file.id === openedFileId));
                         }}>
                         <img src="/icons/plus_icon.svg" alt="close" />
