@@ -5,6 +5,13 @@ import { type Crop } from "react-image-crop";
 import styles from "./Entity.module.css";
 import CropPlugin from "./Toolbar/CropPlugin";
 import Toolbar from "./Toolbar/Toolbar";
+import { pdfjs } from 'react-pdf';
+import { Document, Page } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+
+// Initialize PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export default function Entity() {
   // Global context
@@ -13,6 +20,8 @@ export default function Entity() {
   // Crop plugin states
   const [crop, setCrop] = useState<Crop>();
   const [percentCrop, setPercentCrop] = useState<Crop>();
+  const [numPages, setNumPages] = useState<number>();
+  const [pageNumber, setPageNumber] = useState<number>(1);
 
   // Get the file to show
   const getFileToShow = () => {
@@ -40,6 +49,10 @@ export default function Entity() {
     if (currImgRef?.current) setResolution({ width: currImgRef.current.naturalWidth, height: currImgRef.current.naturalHeight });
   };
 
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setNumPages(numPages);
+  }
+
   if (file)
     return (
       <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange} size="5xl" scrollBehavior="inside" backdrop="blur">
@@ -50,6 +63,45 @@ export default function Entity() {
               {(() => {
                 // 64rem x 35rem
                 const calcImgStyle = resolution.width / resolution.height > 64 / 35 ? styles.image : styles.imageVert;
+
+                // Check if file is PDF
+                if (file.mimeType === "application/pdf") {
+                  console.log(file);
+                  return (
+                    <ModalBody className={styles.modalBody}>
+                      <Document
+                        file={file.blobURL}
+                        onLoadSuccess={onDocumentLoadSuccess}
+                        className={styles.pdfDocument}
+                      >
+                        <Page
+                          pageNumber={pageNumber}
+                          className={styles.pdfPage}
+                          renderTextLayer={false}
+                        />
+                      </Document>
+                      {numPages && (
+                        <div className={styles.pdfControls}>
+                          <button
+                            onClick={() => setPageNumber(prev => Math.max(1, prev - 1))}
+                            disabled={pageNumber <= 1}
+                          >
+                            Previous
+                          </button>
+                          <span>Page {pageNumber} of {numPages}</span>
+                          <button
+                            onClick={() => setPageNumber(prev => Math.min(numPages, prev + 1))}
+                            disabled={pageNumber >= numPages}
+                          >
+                            Next
+                          </button>
+                        </div>
+                      )}
+                    </ModalBody>
+                  );
+                }
+
+                // Existing image handling
                 switch (toolbarMode) {
                   case "normal":
                     return <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>;

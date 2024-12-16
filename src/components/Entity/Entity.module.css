@@ -21,3 +21,44 @@
   @apply text-sm font-normal;
   @apply p-2.5;
 }
+
+.pdfDocument {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.pdfPage {
+  max-width: 100%;
+  height: auto !important;
+}
+
+.pdfPage > canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+
+.pdfControls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+}
+
+.pdfControls button {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  background: white;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.pdfControls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

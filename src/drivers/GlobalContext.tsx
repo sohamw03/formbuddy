@@ -77,7 +77,8 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
           mimeType: file.mimeType,
           parents: file.parents,
           thumbnailLink: file.thumbnailLink,
-          blobURL: `${file.mimeType.includes("image") ? await downFile(file.id) : ""}`,
+          blobURL: `${file.mimeType.includes("image") || file.mimeType === "application/pdf"
+             ? await downFile(file.id) : ""}`,
           resolutionVariants: file.resolutionVariants,
           qualityVariants: file.qualityVariants,
         }))
