@@ -2,71 +2,71 @@ import { getDriveClient } from "@/drivers/ConnectDrive";
 import { type drive_v3 } from "@googleapis/drive";
 
 export async function POST(request: Request) {
-  try {
-    const files = (await listFiles()) as drive_v3.Schema$File[];
+    try {
+        const files = (await listFiles()) as drive_v3.Schema$File[];
 
-    const consFiles = files?.map((file: drive_v3.Schema$File) => {
-      let resolutionVariants: string[] = [];
-      let qualityVariants: string[] = [];
+        const consFiles = files?.map((file: drive_v3.Schema$File) => {
+            let resolutionVariants: string[] = [];
+            let qualityVariants: string[] = [];
 
-      if (!file.name?.match(/(_r_\d+x\d+|_q_\d+)\.(\w+)$/) && file.mimeType?.includes("image")) {
-        const baseFileName = file.name?.split(".").slice(0, -1).join(".");
+            if (!file.name?.match(/(_r_\d+x\d+|_q_\d+)\.(\w+)$/) && (file.mimeType?.includes("image") || file.mimeType === "application/pdf")) {
+                const baseFileName = file.name?.split(".").slice(0, -1).join(".");
 
-        // Find resolution variants
-        resolutionVariants = files
-          .filter((f) => f.name?.includes(baseFileName as string) &&
+                // Find resolution variants
+                resolutionVariants = files
+                    .filter((f) => f.name?.includes(baseFileName as string) &&
                         f.name !== file.name &&
                         f.name?.match(/_r_\d+x\d+\.(\w+)$/))
-          .map((f) => f.id as string);
+                    .map((f) => f.id as string);
 
-        // Find quality variants
-        qualityVariants = files
-          .filter((f) => f.name?.includes(baseFileName as string) &&
+                // Find quality variants
+                qualityVariants = files
+                    .filter((f) => f.name?.includes(baseFileName as string) &&
                         f.name !== file.name &&
                         f.name?.match(/_q_\d+\.(\w+)$/))
-          .map((f) => f.id as string);
-      }
+                    .map((f) => f.id as string);
+            }
 
-      return {
-        ...file,
-        resolutionVariants,
-        qualityVariants
-      } as File;
-    });
+            return {
+                ...file,
+                resolutionVariants,
+                qualityVariants
+            } as File;
+        });
 
-    return Response.json({ status: true, files: consFiles });
-  } catch (error) {
-    console.log(error);
-    return Response.json({ status: false, message: "Error listing files" }, { status: 500 });
-  }
+        return Response.json({ status: true, files: consFiles });
+    } catch (error) {
+        console.log(error);
+        return Response.json({ status: false, message: "Error listing files" }, { status: 500 });
+    }
 }
 
 export async function listFiles() {
-  const service = await getDriveClient();
-  if (service) {
-    try {
-      const res = await service.files.list({
-        spaces: `appDataFolder`,
-        fields: "nextPageToken, files(id, name, mimeType, parents, thumbnailLink)",
-        pageSize: 100,
-      });
-      // console.log(res.data.files);
-      return res.data.files;
-    } catch (error) {
-      throw error;
+    const service = await getDriveClient();
+    if (service) {
+        try {
+            const res = await service.files.list({
+                spaces: `appDataFolder`,
+                fields: "nextPageToken, files(id, name, mimeType, parents, thumbnailLink)",
+                pageSize: 100,
+            });
+            // console.log(res.data.files);
+            return res.data.files;
+        } catch (error) {
+            throw error;
+        }
     }
-  }
 }
 
 type File = {
-  name: string;
-  id: string;
-  mimeType: string;
-  parents: string[];
-  thumbnailLink: string;
-  blobURL: string;
-  resolutionVariants: string[];
-  qualityVariants: string[];
+    name: string;
+    id: string;
+    mimeType: string;
+    parents: string[];
+    thumbnailLink: string;
+    blobURL: string;
+    resolutionVariants: string[];
+    qualityVariants: string[];
 };
 
 // {

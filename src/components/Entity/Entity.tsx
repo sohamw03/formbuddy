@@ -64,52 +64,52 @@ export default function Entity() {
                 // 64rem x 35rem
                 const calcImgStyle = resolution.width / resolution.height > 64 / 35 ? styles.image : styles.imageVert;
 
-                // Check if file is PDF
-                if (file.mimeType === "application/pdf") {
-                  console.log(file);
-                  return (
-                    <ModalBody className={styles.modalBody}>
-                      <Document
-                        file={file.blobURL}
-                        onLoadSuccess={onDocumentLoadSuccess}
-                        className={styles.pdfDocument}
-                      >
-                        <Page
-                          pageNumber={pageNumber}
-                          className={styles.pdfPage}
-                          renderTextLayer={false}
-                        />
-                      </Document>
-                      {numPages && (
-                        <div className={styles.pdfControls}>
-                          <button
-                            onClick={() => setPageNumber(prev => Math.max(1, prev - 1))}
-                            disabled={pageNumber <= 1}
-                          >
-                            Previous
-                          </button>
-                          <span>Page {pageNumber} of {numPages}</span>
-                          <button
-                            onClick={() => setPageNumber(prev => Math.min(numPages, prev + 1))}
-                            disabled={pageNumber >= numPages}
-                          >
-                            Next
-                          </button>
-                        </div>
-                      )}
-                    </ModalBody>
-                  );
-                }
 
                 // Existing image handling
                 switch (toolbarMode) {
                   case "normal":
+                    // Check if file is PDF
+                    if (file.mimeType === "application/pdf") {
+                      return (
+                        <ModalBody className={styles.modalBody}>
+                          <Document
+                            file={file.blobURL}
+                            onLoadSuccess={onDocumentLoadSuccess}
+                            className={styles.pdfDocument}
+                          >
+                            <Page
+                              pageNumber={pageNumber}
+                              className={styles.pdfPage}
+                              renderTextLayer={false}
+                            />
+                          </Document>
+                        </ModalBody>
+                      );
+                    }
                     return <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>;
                   case "crop":
                     return <CropPlugin isOpen={true} src={file.blobURL} crop={crop} setCrop={setCrop} percentCrop={percentCrop} setPercentCrop={setPercentCrop} calcImgStyle={calcImgStyle} />;
                   case "cropped":
                     return <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />}</ModalBody>;
                   case "qualled":
+                    // Check if file is PDF
+                    if (file.mimeType === "application/pdf") {
+                      return (
+                        <ModalBody className={styles.modalBody}>
+                          <Document
+                            file={file.blobURL}
+                            onLoadSuccess={onDocumentLoadSuccess}
+                            className={styles.pdfDocument}
+                          >
+                            <Page
+                              pageNumber={pageNumber}
+                              className={styles.pdfPage}
+                              renderTextLayer={false}
+                            />
+                          </Document>
+                        </ModalBody>
+                      );
+                    }
                     return <ModalBody className={styles.modalBody}>{file && <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} />}</ModalBody>;
                 }
               })()}
