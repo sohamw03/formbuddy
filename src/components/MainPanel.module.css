@@ -1,9 +1,19 @@
 .main {
-  @apply p-8 ps-0;
+  @apply p-4 ps-0;
+}
+@media (max-width: 768px) {
+  .main {
+    @apply p-4 ps-4;
+  }
 }
 
 .heading {
-  @apply text-large font-semibold;
+  @apply text-large font-semibold mt-4;
+}
+@media (max-width: 768px) {
+  .heading {
+    @apply ps-16;
+  }
 }
 
 .heading2 {
@@ -11,10 +21,11 @@
 }
 
 .cardWrapper {
-  @apply gap-2 grid grid-cols-2 sm:grid-cols-4;
+  @apply gap-3 grid grid-cols-2 sm:grid-cols-3 content-start;
   @apply border border-default-200 dark:border-default-100 rounded-2xl;
   @apply p-2 mt-2;
-  @apply overflow-hidden;
+  height: calc(100% - 4.25rem);
+  @apply overflow-y-auto;
 }
 
 .card {
@@ -26,7 +37,12 @@
 }
 
 .image {
-  @apply w-full object-contain h-[140px];
+  @apply w-full object-contain h-[220px];
+}
+@media (max-width: 768px) {
+  .image {
+    @apply h-[150px];
+  }
 }
 
 .cardFooter {
@@ -42,16 +58,18 @@
 }
 
 .uploadBtn {
-  @apply relative;
+  @apply relative z-50;
   @apply absolute bottom-8 right-8;
   @apply w-10 h-10 p-7 overflow-hidden min-w-[unset];
 }
+
 .uploadBtn label {
   @apply absolute top-0 left-0 w-full h-full;
   @apply flex items-center justify-center w-full h-full;
   @apply p-0 m-0 overflow-hidden;
   @apply cursor-pointer;
 }
+
 .uploadBtn input[type="file"] {
   @apply hidden;
 }
@@ -59,6 +77,7 @@
 .dropDownBtn {
   @apply absolute top-1 right-1 rounded-md p-0 m-0 w-6 min-w-min;
 }
+
 .dropDownBtn img {
   @apply w-full h-full max-w-[unset];
 }

@@ -1,16 +1,11 @@
 .modalBody {
   @apply grid place-items-center w-full p-0 m-0 relative;
-  @apply flex-none;
+  @apply flex-none backdrop-brightness-[40%];
   height: 35rem;
 }
 
-.modalBody::before {
-  content: " ";
-  @apply absolute inset-0 -z-[1] backdrop-brightness-75;
-}
-
 .image {
-  @apply w-full !max-h-[35rem];
+  @apply w-full !max-h-[35rem] cursor-grab;
 }
 
 .imageVert {

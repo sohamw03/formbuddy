@@ -3,6 +3,10 @@
   @apply flex flex-col;
 }
 
+.contentWrapper {
+  @apply flex flex-col h-full;
+}
+
 .heading {
   @apply text-large font-semibold;
 }
@@ -18,4 +22,12 @@
 
 .button {
   @apply w-full rounded-md justify-start ps-8;
+}
+
+.menuButton {
+  @apply fixed top-5 left-4 z-50;
+}
+
+.drawerBody {
+  @apply p-8;
 }

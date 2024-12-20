@@ -1,3 +1,4 @@
+"use client";
 import { type fileObj, useGlobal } from "@/drivers/GlobalContext";
 import { Button, Popover, PopoverContent, PopoverTrigger, Slider, SliderValue, Link } from "@nextui-org/react";
 import { motion } from "framer-motion";
