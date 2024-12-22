@@ -39,12 +39,50 @@
 
 .image {
   @apply w-full object-contain h-[220px];
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 @media (max-width: 768px) {
   .image {
     @apply h-[150px];
   }
+}
+
+.pdfWrapper {
+  @apply w-full h-[220px] overflow-hidden;
+}
+
+.pdfWrapper :global(.react-pdf__Document) {
+  @apply w-full h-full flex items-center justify-center;
+}
+
+.pdfWrapper :global(.react-pdf__Page) {
+  @apply w-full h-full overflow-hidden;
+  @apply flex items-center justify-center;
+}
+
+.pdfWrapper :global(.react-pdf__Page canvas) {
+  @apply w-full h-full object-cover;
+}
+
+@media (max-width: 768px) {
+  .pdfWrapper {
+    @apply h-[150px];
+  }
+}
+
+.cardBody :global(.react-pdf__Page) {
+  pointer-events: none;
+  user-select: none;
+}
+
+.cardBody :global(.react-pdf__Page canvas) {
+  pointer-events: none;
+  user-select: none;
+  width: 100% !important;
+  height: auto !important;
 }
 
 .cardFooter {

@@ -2,6 +2,7 @@
   @apply grid place-items-center w-full p-0 m-0 relative;
   @apply flex-none backdrop-brightness-[40%];
   height: 35rem;
+  overflow-y: auto;
 }
 
 .image {
@@ -22,6 +23,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  gap: 1rem;
 }
 
 .pdfPage {

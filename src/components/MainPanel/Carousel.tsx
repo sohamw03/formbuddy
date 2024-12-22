@@ -5,6 +5,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import styles from "../MainPanel.module.css";
+import { Document, Page, pdfjs } from 'react-pdf';
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
+
+// Initialize PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 // Utility function to extract resolution from filename
 const getResolution = (filename: string) => {
@@ -17,6 +23,22 @@ const getQuality = (filename: string) => {
   const match = filename.match(/_q_(\d+)/);
   return match ? `${match[1]}% Quality` : "Original";
 };
+
+function PDFThumbnail({ file }: { file: fileObj }) {
+  return (
+    <div className={styles.pdfWrapper}>
+      <Document file={file.blobURL}>
+        <Page
+          pageNumber={1}
+          width={300}
+          height={220}
+          renderTextLayer={false}
+          renderAnnotationLayer={false}
+        />
+      </Document>
+    </div>
+  );
+}
 
 export default function Carousel(props: { title: string; folder: string; className?: string }) {
   // Global States
@@ -65,7 +87,18 @@ export default function Carousel(props: { title: string; folder: string; classNa
                 }}
                 className={styles.card}>
                 <CardBody className={styles.cardBody}>
-                  <Image shadow="sm" radius="lg" width="100%" alt={fileVariant.name} className={styles.image} src={fileVariant.thumbnailLink} />
+                  {fileVariant.mimeType === "application/pdf" ? (
+                    <PDFThumbnail file={fileVariant} />
+                  ) : (
+                    <Image
+                      shadow="sm"
+                      radius="lg"
+                      width="100%"
+                      alt={fileVariant.name}
+                      className={`${styles.image} pointer-events-none`}
+                      src={fileVariant.thumbnailLink}
+                    />
+                  )}
                 </CardBody>
                 <CardFooter className={styles.cardFooter}>
                   <abbr title={fileVariant.name} className="whitespace-nowrap overflow-hidden no-underline">

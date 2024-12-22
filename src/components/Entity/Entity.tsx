@@ -22,7 +22,6 @@ export default function Entity() {
   const [crop, setCrop] = useState<Crop>();
   const [percentCrop, setPercentCrop] = useState<Crop>();
   const [numPages, setNumPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState<number>(1);
 
   // Get the file to show
   const getFileToShow = () => {
@@ -73,7 +72,9 @@ export default function Entity() {
                       return (
                         <ModalBody className={styles.modalBody}>
                           <Document file={file.blobURL} onLoadSuccess={onDocumentLoadSuccess} className={styles.pdfDocument}>
-                            <Page pageNumber={pageNumber} className={styles.pdfPage} renderTextLayer={false} />
+                            {Array.from(new Array(numPages), (_, index) => (
+                              <Page key={`page_${index + 1}`} pageNumber={index + 1} className={styles.pdfPage} renderTextLayer={false} />
+                            ))}
                           </Document>
                         </ModalBody>
                       );
@@ -109,7 +110,9 @@ export default function Entity() {
                       return (
                         <ModalBody className={styles.modalBody}>
                           <Document file={file.blobURL} onLoadSuccess={onDocumentLoadSuccess} className={styles.pdfDocument}>
-                            <Page pageNumber={pageNumber} className={styles.pdfPage} renderTextLayer={false} />
+                            {Array.from(new Array(numPages), (_, index) => (
+                              <Page key={`page_${index + 1}`} pageNumber={index + 1} className={styles.pdfPage} renderTextLayer={false} />
+                            ))}
                           </Document>
                         </ModalBody>
                       );
