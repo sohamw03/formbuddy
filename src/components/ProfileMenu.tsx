@@ -1,6 +1,7 @@
 "use client";
 import { useGlobal } from "@/drivers/GlobalContext";
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import styles from "@/components/MainPanel.module.css";
 
 export default function ProfileMenu() {
   // Global context
@@ -8,7 +9,12 @@ export default function ProfileMenu() {
 
   return (
     <Dropdown>
-      <DropdownTrigger style={{ position: "fixed", top: "1.5rem", right: "1.1rem" }}>{user.loggedIn ? <Avatar isBordered as="button" className="transition-transform" color="default" size="md" src={user.image} imgProps={{ style: { filter: "brightness(95%)", width: 48, height: 48 } }} /> : <Avatar isBordered as="button" className="transition-transform" color="default" size="md" src="/icons/person_icon.svg" imgProps={{ style: { filter: "brightness(95%)", width: 48, height: 48 } }} />}</DropdownTrigger>
+      <DropdownTrigger style={{ position: "fixed", top: "1.5rem", right: "1.1rem" }}>
+        {user.loggedIn ?
+          <Avatar isBordered as="button" className="transition-transform" color="default" size="md" src={user.image} imgProps={{ className: styles.nonInteractive, style: { filter: "brightness(95%)", width: 48, height: 48 } }} /> :
+          <Avatar isBordered as="button" className="transition-transform" color="default" size="md" src="/icons/person_icon.svg" imgProps={{ className: styles.nonInteractive, style: { filter: "brightness(95%)", width: 48, height: 48 } }} />
+        }
+      </DropdownTrigger>
       <DropdownMenu aria-label="Profile Actions" variant="flat">
         {user.loggedIn ? (
           <DropdownItem textValue="profile" key="profile" className="h-14 gap-2">

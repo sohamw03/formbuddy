@@ -8,6 +8,12 @@
   }
 }
 
+.main.dragging {
+  @apply relative;
+  @apply border-2 border-dashed border-primary-500;
+  @apply bg-primary-500/10;
+}
+
 .heading {
   @apply text-large font-semibold mt-4;
 }
@@ -98,16 +104,20 @@
 }
 
 .uploadBtn {
-  @apply relative z-50;
-  @apply absolute bottom-8 right-8;
-  @apply w-10 h-10 p-7 overflow-hidden min-w-[unset];
+  @apply fixed bottom-8 right-8;
+  @apply w-16 h-16 overflow-hidden min-w-[unset];
+  transition: all 0.3s ease;
+  z-index: 50;
 }
 
-.uploadBtn label {
-  @apply absolute top-0 left-0 w-full h-full;
-  @apply flex items-center justify-center w-full h-full;
-  @apply p-0 m-0 overflow-hidden;
-  @apply cursor-pointer;
+.uploadBtn.dragging {
+  @apply bg-primary;
+  width: 120px !important;
+  height: 80px !important;
+}
+
+.uploadBtn.dragging img {
+  transform: scale(0.8);
 }
 
 .uploadBtn input[type="file"] {
@@ -120,4 +130,21 @@
 
 .dropDownBtn img {
   @apply w-full h-full max-w-[unset];
+}
+
+.dragOverlay {
+  @apply fixed inset-0 z-40;
+  @apply flex items-center justify-center;
+  @apply text-2xl font-semibold text-primary-500;
+  @apply bg-background/80 backdrop-blur-sm;
+  pointer-events: none;
+}
+
+.nonInteractive {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
