@@ -7,35 +7,40 @@ import { useRouter } from "next/navigation";
 import GoogleLoginButton from "./GoogleLoginButton";
 import styles from "./SidePanel.module.css";
 
-function SidePanelContent() {
+function SidePanelContent({ onClose }: { onClose?: () => void }) {
   const { user } = useGlobal();
   const router = useRouter();
+
+  const handleNavigation = (path: string) => {
+    router.push(path);
+    onClose?.();
+  };
 
   return (
     <div className={styles.contentWrapper}>
       <h1 className={styles.heading}>
-        <Link href={"/"}>FormBuddy</Link>
+        <Link href={"/"} onClick={() => onClose?.()}>FormBuddy</Link>
       </h1>
       <div className={styles.navWrapper}>
         <Button
           className={styles.button}
           color="default"
           variant="flat"
-          onClick={() => router.push("/photos")}>
+          onClick={() => handleNavigation("/photos")}>
           Photos
         </Button>
         <Button
           className={styles.button}
           color="default"
           variant="flat"
-          onClick={() => router.push("/docs")}>
+          onClick={() => handleNavigation("/docs")}>
           Docs
         </Button>
         <Button
           className={styles.button}
           color="default"
           variant="flat"
-          onClick={() => router.push("/sign")}>
+          onClick={() => handleNavigation("/sign")}>
           Signatures
         </Button>
       </div>
@@ -62,10 +67,17 @@ export default function SidePanel() {
         >
           ☰
         </Button>
-        <Drawer isOpen={isOpen} onOpenChange={onOpenChange} placement="left">
+        <Drawer
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          placement="left"
+          classNames={{
+            closeButton: styles.drawerCloseButton
+          }}
+        >
           <DrawerContent>
             <DrawerBody className={styles.drawerBody}>
-              <SidePanelContent />
+              <SidePanelContent onClose={() => onOpenChange()} />
             </DrawerBody>
           </DrawerContent>
         </Drawer>

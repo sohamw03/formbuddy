@@ -24,10 +24,20 @@
   @apply w-full rounded-md justify-start ps-8;
 }
 
+@media (max-width: 768px) {
+  .button {
+    @apply h-14 text-lg;
+  }
+}
+
 .menuButton {
   @apply fixed top-5 left-4 z-50;
 }
 
 .drawerBody {
   @apply p-8;
+}
+
+.drawerCloseButton {
+  @apply w-12 h-12 text-2xl grid place-items-center;
 }
