@@ -1,6 +1,7 @@
 .main {
-  @apply p-4 ps-0;
+  @apply flex flex-col items-stretch justify-stretch p-4 ps-0;
 }
+
 @media (max-width: 768px) {
   .main {
     @apply p-4 ps-4;
@@ -10,6 +11,7 @@
 .heading {
   @apply text-large font-semibold mt-4;
 }
+
 @media (max-width: 768px) {
   .heading {
     @apply ps-16;
@@ -23,8 +25,7 @@
 .cardWrapper {
   @apply gap-3 grid grid-cols-2 sm:grid-cols-3 content-start;
   @apply border border-default-200 dark:border-default-100 rounded-2xl;
-  @apply p-2 mt-2;
-  height: calc(100% - 4.25rem);
+  @apply p-2 mt-2 h-full;
   @apply overflow-y-auto;
 }
 
@@ -39,6 +40,7 @@
 .image {
   @apply w-full object-contain h-[220px];
 }
+
 @media (max-width: 768px) {
   .image {
     @apply h-[150px];

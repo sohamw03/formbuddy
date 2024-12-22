@@ -18,11 +18,11 @@ const getQuality = (filename: string) => {
   return match ? `${match[1]}% Quality` : "Original";
 };
 
-export default function Carousel(props: { title: string; folder: string }) {
+export default function Carousel(props: { title: string; folder: string; className?: string }) {
   // Global States
   const { files, removeFile, onOpen, setOpenedFileId, setToolbarMode } = useGlobal();
   // Props
-  const { title, folder } = props;
+  const { title, folder, className } = props;
 
   const path = usePathname();
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
@@ -49,7 +49,7 @@ export default function Carousel(props: { title: string; folder: string }) {
   return (
     <>
       {title !== "" && <h2 className={styles.heading2}>{title}</h2>}
-      <div className={styles.cardWrapper}>
+      <div className={`${styles.cardWrapper} ${className || ''}`}>
         {filesToShow.map((file) => {
           const fileVariant = (file.children?.find((f) => f.id === selectedVariants[file.id]) as fileObj) || file;
           return (
@@ -127,7 +127,7 @@ export default function Carousel(props: { title: string; folder: string }) {
                       Delete file
                     </DropdownItem>
                   </DropdownSection>
-                </DropdownMenu>
+              </DropdownMenu>
               </Dropdown>
             </div>
           );

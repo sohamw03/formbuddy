@@ -34,9 +34,9 @@ export default function MainPanel(props: { page: string }) {
       return (
         <div className={styles.main}>
           <h1 className={styles.heading}>Recents</h1>
-          <Carousel title="Photos" folder={"photos"} />
-          <Carousel title="Docs" folder={"docs"} />
-          <Carousel title="Signatures" folder={"signatures"} />
+          <Carousel title="Photos" folder={"photos"} className={styles.homeCarousel} />
+          <Carousel title="Docs" folder={"docs"} className={styles.homeCarousel} />
+          <Carousel title="Signatures" folder={"signatures"} className={styles.homeCarousel} />
         </div>
       );
     case "photos":
