@@ -1,7 +1,8 @@
 "use client";
 
 import { useGlobal } from "@/drivers/GlobalContext";
-import { Spacer } from "@nextui-org/react";
+import { Spacer, Spinner } from "@nextui-org/react";
+import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import Entity from "./Entity/Entity";
 import styles from "./MainPanel.module.css";
@@ -16,18 +17,34 @@ const folderMap: Record<string, string> = {
 };
 
 export default function MainPanel(props: { page: string }) {
-  // Global States
-  const { user, initUserDirective, listFiles } = useGlobal();
-  // Props
   const { page } = props;
+  // Global States
+  const { user, initUserDirective, listFiles, isInitialized, setIsInitialized, setNavigationDisabled } = useGlobal();
+  // Local States
   const [isDragging, setIsDragging] = useState(false);
+  const [initializing, setInitializing] = useState(true);
+
+  if (page !== "home" && isInitialized === false) {
+    redirect("/");
+  }
 
   useEffect(() => {
     if (user.loggedIn === true) {
       // Check and maintain directory structure; List files if home page
-      if (page === "home") initUserDirective(true);
-      else listFiles();
+      if (page === "home" && isInitialized === false) {
+        initUserDirective(true)
+          .then(() => {
+            setInitializing(false);
+            setIsInitialized(true);
+            setNavigationDisabled(false);
+          })
+          .catch((err) => {
+            console.error(err);
+            setInitializing(false);
+          });
+      } else listFiles().then(() => setInitializing(false));
     }
+    setInitializing(false);
   }, [user]);
 
   useEffect(() => {
@@ -59,25 +76,32 @@ export default function MainPanel(props: { page: string }) {
     };
   }, [page]);
 
-  return (
-    <div className={`${styles.main} ${isDragging && page !== "home" ? styles.dragging : ""}`}>
-      {page === "home" ? (
-        <>
-          <h1 className={styles.heading}>Recents</h1>
-          <Carousel title="Photos" folder={"photos"} className={styles.homeCarousel} />
-          <Carousel title="Docs" folder={"docs"} className={styles.homeCarousel} />
-          <Carousel title="Signatures" folder={"signatures"} className={styles.homeCarousel} />
-        </>
-      ) : (
-        <>
-          <Upload page={folderMap[page]} isDragging={isDragging} setIsDragging={setIsDragging} />
-          <h1 className={styles.heading}>{page === "sign" ? "Signatures" : `${page.charAt(0).toUpperCase()}${page.slice(1)}`}</h1>
-          <Spacer y={4} />
-          <Carousel title="" folder={folderMap[page]} />
-          <Entity />
-        </>
-      )}
-      {isDragging && page !== "home" && <div className={styles.dragOverlay}>Drop files here</div>}
-    </div>
-  );
+  if (initializing) {
+    return (
+      <div className={styles.main}>
+        <Spinner size="lg" label={page === "home" && isInitialized === false ? "Initializing..." : "Loading files..."} className="h-full" />
+      </div>
+    );
+  } else
+    return (
+      <div className={`${styles.main} ${isDragging && page !== "home" ? styles.dragging : ""}`}>
+        {page === "home" ? (
+          <>
+            <h1 className={styles.heading}>Recents</h1>
+            <Carousel title="Photos" folder={"photos"} className={styles.homeCarousel} />
+            <Carousel title="Docs" folder={"docs"} className={styles.homeCarousel} />
+            <Carousel title="Signatures" folder={"signatures"} className={styles.homeCarousel} />
+          </>
+        ) : (
+          <>
+            <Upload page={folderMap[page]} isDragging={isDragging} setIsDragging={setIsDragging} />
+            <h1 className={styles.heading}>{page === "sign" ? "Signatures" : `${page.charAt(0).toUpperCase()}${page.slice(1)}`}</h1>
+            <Spacer y={4} />
+            <Carousel title="" folder={folderMap[page]} />
+            <Entity />
+          </>
+        )}
+        {isDragging && page !== "home" && <div className={styles.dragOverlay}>Drop files here</div>}
+      </div>
+    );
 }

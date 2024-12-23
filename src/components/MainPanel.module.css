@@ -105,7 +105,7 @@
 
 .uploadBtn {
   @apply fixed bottom-8 right-8;
-  @apply w-16 h-16 overflow-hidden min-w-[unset];
+  @apply w-14 h-14 overflow-hidden min-w-[unset];
   transition: all 0.3s ease;
   z-index: 50;
 }

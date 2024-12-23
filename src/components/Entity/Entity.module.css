@@ -59,3 +59,10 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+@media (max-width: 768px) {
+  .modalBody {
+    height: 100vh;
+    height: 100svh;
+  }
+}

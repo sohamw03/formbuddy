@@ -126,12 +126,12 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                                                                 <Slider step={1} maxValue={100} minValue={1} defaultValue={100} size="md" color="foreground" showTooltip className="max-w-md" value={quality} onChange={setQuality} onDoubleClick={() => setQuality(100)} aria-label="Quality" label="Quality" isDisabled={isResolutionVariant(fileState.file.name)} />
                                                             </div>
                                                             <div className="flex justify-between mt-2">
-                                                                <Link className="cursor-pointer" onClick={() => { setQuality(100); }} underline="always" size="sm" isDisabled={isResolutionVariant(fileState.file.name)}>
+                                                                <Link className="cursor-pointer" onPress={() => { setQuality(100); }} underline="always" size="sm" isDisabled={isResolutionVariant(fileState.file.name)}>
                                                                     <span>Reset</span>
                                                                 </Link>
                                                                 <Button
                                                                     size="sm"
-                                                                    onClick={handleQualityChange}
+                                                                    onPress={handleQualityChange}
                                                                     disabled={qualityDisabled || isResolutionVariant(fileState.file.name)}
                                                                 >
                                                                     Apply
@@ -144,7 +144,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                                         </div>
                                         {fileState.file.mimeType !== "application/pdf" && resolutionBlock}
                                         {fileState.file.mimeType !== "application/pdf" && <div style={{ justifySelf: "flex-end", height: "100%" }}>
-                                            <Button className={styles.toolBtn} variant="flat" onClick={() => setToolbarMode("crop")} style={{ justifySelf: "end" }} disabled={cropDisabled || isQualityVariant(fileState.file.name)}>
+                                            <Button className={styles.toolBtn} variant="flat" onPress={() => setToolbarMode("crop")} style={{ justifySelf: "end" }} disabled={cropDisabled || isQualityVariant(fileState.file.name)}>
                                                 <img src="/icons/crop_icon.svg" alt="crop" />
                                             </Button>
                                         </div>}
@@ -154,7 +154,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                                 return (
                                     <>
                                         <div style={{ justifySelf: "start", height: "100%" }}>
-                                            <Button className={styles.cancelBtn} variant="flat" onClick={() => setToolbarMode("normal")}>
+                                            <Button className={styles.cancelBtn} variant="flat" onPress={() => setToolbarMode("normal")}>
                                                 <img src="/icons/plus_icon.svg" alt="close" />
                                             </Button>
                                         </div>
@@ -163,7 +163,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                                             <Button
                                                 className={styles.toolBtn}
                                                 variant="flat"
-                                                onClick={() => {
+                                                onPress={() => {
                                                     toast.promise(
                                                         new Promise<void>(async (resolve, reject) => {
                                                             try {
@@ -216,7 +216,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                                             <Button
                                                 className={styles.cancelBtn}
                                                 variant="flat"
-                                                onClick={() => {
+                                                onPress={() => {
                                                     setToolbarMode("normal");
                                                     fileState.setFile((prev) => files.find((file) => file.id === openedFileId));
                                                 }}>
@@ -228,7 +228,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                                             <Button
                                                 className={styles.saveBtn}
                                                 variant="flat"
-                                                onClick={() => {
+                                                onPress={() => {
                                                     toast.promise(
                                                         new Promise<void>(async (resolve, reject) => {
                                                             try {
@@ -267,7 +267,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                                             <Button
                                                 className={styles.cancelBtn}
                                                 variant="flat"
-                                                onClick={() => {
+                                                onPress={() => {
                                                     setToolbarMode("normal");
                                                     setQuality(100);
                                                     fileState.setFile(files.find((file) => file.id === openedFileId));
@@ -280,7 +280,7 @@ export default function Toolbar({ resolution, crop, percentCrop, fileState }: { 
                                             <Button
                                                 className={styles.saveBtn}
                                                 variant="flat"
-                                                onClick={() => {
+                                                onPress={() => {
                                                     toast.promise(
                                                         new Promise<void>(async (resolve, reject) => {
                                                             try {

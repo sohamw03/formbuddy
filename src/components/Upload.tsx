@@ -55,9 +55,6 @@ export default function Upload(props: { page: string; isDragging: boolean; setIs
       variant="shadow"
       onPress={() => {
         uploadRef.current?.click();
-      }}
-      onTouchEnd={() => {
-        uploadRef.current?.click();
       }}>
       <img src="/icons/plus_icon.svg" width={40} height={40} alt="plus_icon" className={styles.nonInteractive} />
       <input type="file" onChange={(e) => e.target.files?.[0] && handleFileProcess(e.target.files[0])} accept="image/*,application/pdf" multiple={false} ref={uploadRef} />

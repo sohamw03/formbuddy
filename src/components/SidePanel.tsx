@@ -9,7 +9,7 @@ import GoogleLoginButton from "./GoogleLoginButton";
 import styles from "./SidePanel.module.css";
 
 function SidePanelContent({ onClose }: { onClose?: () => void }) {
-  const { user } = useGlobal();
+  const { user, navigationDisabled } = useGlobal();
   const router = useRouter();
 
   const handleNavigation = (path: string) => {
@@ -25,13 +25,13 @@ function SidePanelContent({ onClose }: { onClose?: () => void }) {
         </Link>
       </h1>
       <div className={styles.navWrapper}>
-        <Button className={styles.button} color="default" variant="flat" onPress={() => handleNavigation("/photos")} startContent={<Image src="/icons/photos_icon.svg" alt="Photos" width={14} height={14} />}>
+        <Button className={styles.button} color="default" variant="flat" onPress={() => handleNavigation("/photos")} startContent={<Image src="/icons/photos_icon.svg" alt="Photos" width={14} height={14} />} isDisabled={navigationDisabled}>
           Photos
         </Button>
-        <Button className={styles.button} color="default" variant="flat" onPress={() => handleNavigation("/docs")} startContent={<Image src="/icons/docs_icon.svg" alt="Docs" width={14} height={14} />}>
+        <Button className={styles.button} color="default" variant="flat" onPress={() => handleNavigation("/docs")} startContent={<Image src="/icons/docs_icon.svg" alt="Docs" width={14} height={14} />} isDisabled={navigationDisabled}>
           Docs
         </Button>
-        <Button className={styles.button} color="default" variant="flat" onPress={() => handleNavigation("/sign")} startContent={<Image src="/icons/signature_icon.svg" alt="Signatures" width={14} height={14} />}>
+        <Button className={styles.button} color="default" variant="flat" onPress={() => handleNavigation("/sign")} startContent={<Image src="/icons/signature_icon.svg" alt="Signatures" width={14} height={14} />} isDisabled={navigationDisabled}>
           Signatures
         </Button>
       </div>

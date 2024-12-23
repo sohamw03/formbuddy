@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import styles from "../MainPanel.module.css";
-import { Document, Page, pdfjs } from 'react-pdf';
+import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
@@ -28,13 +28,7 @@ function PDFThumbnail({ file }: { file: fileObj }) {
   return (
     <div className={styles.pdfWrapper}>
       <Document file={file.blobURL}>
-        <Page
-          pageNumber={1}
-          width={300}
-          height={220}
-          renderTextLayer={false}
-          renderAnnotationLayer={false}
-        />
+        <Page pageNumber={1} width={300} height={220} renderTextLayer={false} renderAnnotationLayer={false} />
       </Document>
     </div>
   );
@@ -70,16 +64,18 @@ export default function Carousel(props: { title: string; folder: string; classNa
 
   const handleCopy = async (file: fileObj) => {
     try {
-      const response = await fetch(file.blobURL);
-      const blob = await response.blob();
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          [file.mimeType]: blob
-        })
-      ]);
-      toast.success('Copied to clipboard!');
+      if (await navigator.permissions.query({ name: "clipboard-write" as any }).then((result) => result.state === "granted")) {
+        const response = await fetch(file.blobURL);
+        const blob = await response.blob();
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            [file.mimeType]: blob,
+          }),
+        ]);
+        toast.success("Copied to clipboard!");
+      } else throw new Error("Clipboard permission denied");
     } catch (error) {
-      toast.error(`Failed to copy. [${error}]. IsSecureContext: ${window.isSecureContext}`);
+      toast.error(`Failed to copy. [${error}]`);
       console.error(error);
     }
   };
@@ -87,7 +83,7 @@ export default function Carousel(props: { title: string; folder: string; classNa
   return (
     <>
       {title !== "" && <h2 className={styles.heading2}>{title}</h2>}
-      <div className={`${styles.cardWrapper} ${className || ''}`}>
+      <div className={`${styles.cardWrapper} ${className || ""}`}>
         {filesToShow.map((file) => {
           const fileVariant = (file.children?.find((f) => f.id === selectedVariants[file.id]) as fileObj) || file;
           return (
@@ -110,20 +106,7 @@ export default function Carousel(props: { title: string; folder: string; classNa
                   onOpen();
                 }}
                 className={styles.card}>
-                <CardBody className={styles.cardBody}>
-                  {fileVariant.mimeType === "application/pdf" ? (
-                    <PDFThumbnail file={fileVariant} />
-                  ) : (
-                    <Image
-                      shadow="sm"
-                      radius="lg"
-                      width="100%"
-                      alt={fileVariant.name}
-                      className={`${styles.image} pointer-events-none`}
-                      src={fileVariant.thumbnailLink}
-                    />
-                  )}
-                </CardBody>
+                <CardBody className={styles.cardBody}>{fileVariant.mimeType === "application/pdf" ? <PDFThumbnail file={fileVariant} /> : <Image shadow="sm" radius="lg" width="100%" alt={fileVariant.name} className={`${styles.image} pointer-events-none`} src={fileVariant.thumbnailLink} />}</CardBody>
                 <CardFooter className={styles.cardFooter}>
                   <abbr title={fileVariant.name} className="whitespace-nowrap overflow-hidden no-underline">
                     <b>{fileVariant.name}</b>
@@ -155,24 +138,18 @@ export default function Carousel(props: { title: string; folder: string; classNa
                     }
                   }}>
                   <DropdownSection title={undefined}>
-                    <DropdownItem
-                      key={`variant_${file.id}`}
-                      className={selectedVariants[file.id] === file.id ? "text-primary-300" : ""}>
+                    <DropdownItem key={`variant_${file.id}`} className={selectedVariants[file.id] === file.id ? "text-primary-300" : ""}>
                       Original
                     </DropdownItem>
                   </DropdownSection>
-                  <DropdownSection
-                    title="Resolution Variants"
-                    items={file.children?.filter(c => c.name.includes('_r_')) || []}>
+                  <DropdownSection title="Resolution Variants" items={file.children?.filter((c) => c.name.includes("_r_")) || []}>
                     {(variant) => (
                       <DropdownItem key={`variant_${variant.id}`} className={selectedVariants[file.id] === variant.id ? "text-primary-300" : ""}>
                         {getResolution(variant.name)}
                       </DropdownItem>
                     )}
                   </DropdownSection>
-                  <DropdownSection
-                    title="Quality Variants"
-                    items={file.children?.filter(c => c.name.includes('_q_')) || []}>
+                  <DropdownSection title="Quality Variants" items={file.children?.filter((c) => c.name.includes("_q_")) || []}>
                     {(variant) => (
                       <DropdownItem key={`variant_${variant.id}`} className={selectedVariants[file.id] === variant.id ? "text-primary-300" : ""}>
                         {getQuality(variant.name)}
@@ -184,7 +161,7 @@ export default function Carousel(props: { title: string; folder: string; classNa
                       Delete file
                     </DropdownItem>
                   </DropdownSection>
-              </DropdownMenu>
+                </DropdownMenu>
               </Dropdown>
             </div>
           );

@@ -1,5 +1,6 @@
 "use client";
 import { fileObj, useGlobal } from "@/drivers/GlobalContext";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { type Crop } from "react-image-crop";
@@ -22,6 +23,8 @@ export default function Entity() {
   const [crop, setCrop] = useState<Crop>();
   const [percentCrop, setPercentCrop] = useState<Crop>();
   const [numPages, setNumPages] = useState<number>();
+
+  const isMobile = useBreakpoint(768); // md breakpoint
 
   // Get the file to show
   const getFileToShow = () => {
@@ -55,7 +58,7 @@ export default function Entity() {
 
   if (file)
     return (
-      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange} size="5xl" scrollBehavior="inside" backdrop="blur">
+      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange} size={isMobile ? "full" : "5xl"} scrollBehavior="inside" backdrop="blur">
         <ModalContent className="relative">
           {(onClose) => (
             <>
@@ -83,7 +86,7 @@ export default function Entity() {
                       <ModalBody className={styles.modalBody}>
                         {file && (
                           <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
-                            <TransformComponent wrapperStyle={{cursor: "grab"}}>
+                            <TransformComponent wrapperStyle={{ cursor: "grab" }}>
                               <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />
                             </TransformComponent>
                           </TransformWrapper>
@@ -97,7 +100,7 @@ export default function Entity() {
                       <ModalBody className={styles.modalBody}>
                         {file && (
                           <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
-                            <TransformComponent wrapperStyle={{cursor: "grab"}}>
+                            <TransformComponent wrapperStyle={{ cursor: "grab" }}>
                               <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />
                             </TransformComponent>
                           </TransformWrapper>
@@ -121,7 +124,7 @@ export default function Entity() {
                       <ModalBody className={styles.modalBody}>
                         {file && (
                           <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
-                            <TransformComponent wrapperStyle={{cursor: "grab"}}>
+                            <TransformComponent wrapperStyle={{ cursor: "grab" }}>
                               <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} />
                             </TransformComponent>
                           </TransformWrapper>

@@ -14,6 +14,8 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   const [files, setFiles] = useState<Array<fileObj>>([]);
   const [openedFileId, setOpenedFileId] = useState("");
   const [currFolder, setCurrFolder] = useState<currFolderType>("home");
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [navigationDisabled, setNavigationDisabled] = useState(!isInitialized);
   // Refs
   const currImgRef = useRef<HTMLImageElement>(null);
   // NextUI modal
@@ -55,11 +57,10 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       const responseJson = await response.json();
       console.log(responseJson);
 
-      if (doListFiles) {
-        await listFiles();
-      }
+      if (doListFiles) await listFiles();
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
@@ -77,8 +78,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
           mimeType: file.mimeType,
           parents: file.parents,
           thumbnailLink: file.thumbnailLink,
-          blobURL: `${file.mimeType.includes("image") || file.mimeType === "application/pdf"
-             ? await downFile(file.id) : ""}`,
+          blobURL: `${file.mimeType.includes("image") || file.mimeType === "application/pdf" ? await downFile(file.id) : ""}`,
           resolutionVariants: file.resolutionVariants,
           qualityVariants: file.qualityVariants,
         }))
@@ -272,6 +272,10 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     currFolder,
     setCurrFolder,
     qualImage,
+    isInitialized,
+    setIsInitialized,
+    navigationDisabled,
+    setNavigationDisabled,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
@@ -313,6 +317,10 @@ export interface Values {
   currFolder: currFolderType;
   setCurrFolder: React.Dispatch<React.SetStateAction<currFolderType>>;
   qualImage: (id: string, quality: number) => Promise<string>;
+  isInitialized: boolean;
+  setIsInitialized: React.Dispatch<React.SetStateAction<boolean>>;
+  navigationDisabled: boolean;
+  setNavigationDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type fileObj = {
