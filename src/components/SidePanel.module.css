@@ -21,7 +21,7 @@
 }
 
 .button {
-  @apply w-full rounded-md justify-start ps-8;
+  @apply w-full rounded-md justify-start ps-3;
 }
 
 @media (max-width: 768px) {

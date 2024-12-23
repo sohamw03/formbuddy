@@ -6,10 +6,10 @@ import { type Crop } from "react-image-crop";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import styles from "./Entity.module.css";
 import CropPlugin from "./Toolbar/CropPlugin";
 import Toolbar from "./Toolbar/Toolbar";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 // Initialize PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -82,8 +82,8 @@ export default function Entity() {
                     return (
                       <ModalBody className={styles.modalBody}>
                         {file && (
-                          <TransformWrapper smooth={true}>
-                            <TransformComponent>
+                          <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
+                            <TransformComponent wrapperStyle={{cursor: "grab"}}>
                               <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />
                             </TransformComponent>
                           </TransformWrapper>
@@ -96,8 +96,8 @@ export default function Entity() {
                     return (
                       <ModalBody className={styles.modalBody}>
                         {file && (
-                          <TransformWrapper smooth={true}>
-                            <TransformComponent>
+                          <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
+                            <TransformComponent wrapperStyle={{cursor: "grab"}}>
                               <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />
                             </TransformComponent>
                           </TransformWrapper>
@@ -120,8 +120,8 @@ export default function Entity() {
                     return (
                       <ModalBody className={styles.modalBody}>
                         {file && (
-                          <TransformWrapper smooth={true}>
-                            <TransformComponent>
+                          <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
+                            <TransformComponent wrapperStyle={{cursor: "grab"}}>
                               <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} />
                             </TransformComponent>
                           </TransformWrapper>

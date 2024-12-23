@@ -6,7 +6,7 @@
 }
 
 .image {
-  @apply w-full !max-h-[35rem] cursor-grab;
+  @apply w-full !max-h-[35rem];
 }
 
 .imageVert {

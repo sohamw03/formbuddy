@@ -68,6 +68,22 @@ export default function Carousel(props: { title: string; folder: string; classNa
     setSelectedVariants(initialVariants);
   }, [filesToShow]);
 
+  const handleCopy = async (file: fileObj) => {
+    try {
+      const response = await fetch(file.blobURL);
+      const blob = await response.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          [file.mimeType]: blob
+        })
+      ]);
+      toast.success('Copied to clipboard!');
+    } catch (error) {
+      toast.error('Failed to copy');
+      console.error(error);
+    }
+  };
+
   return (
     <>
       {title !== "" && <h2 className={styles.heading2}>{title}</h2>}
@@ -76,6 +92,14 @@ export default function Carousel(props: { title: string; folder: string; classNa
           const fileVariant = (file.children?.find((f) => f.id === selectedVariants[file.id]) as fileObj) || file;
           return (
             <div key={file.id} className="relative">
+              <Button
+                variant="shadow"
+                className={styles.copyBtn}
+                onPress={(e) => {
+                  handleCopy(fileVariant);
+                }}>
+                <img className={styles.nonInteractive} src="/icons/copy_icon.svg" alt="copy" />
+              </Button>
               <Card
                 shadow="sm"
                 isPressable

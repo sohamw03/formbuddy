@@ -1,12 +1,11 @@
 "use client";
 import { type fileObj, useGlobal } from "@/drivers/GlobalContext";
-import { Button, Popover, PopoverContent, PopoverTrigger, Slider, SliderValue, Link } from "@nextui-org/react";
+import { Button, Link, Popover, PopoverContent, PopoverTrigger, Slider, SliderValue, useDisclosure } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { type Crop } from "react-image-crop";
 import styles from "./Toolbar.module.css";
-import { useDisclosure } from "@nextui-org/react";
 
 export default function Toolbar({ resolution, crop, percentCrop, fileState }: { resolution: { width: number; height: number }; crop: Crop | undefined; fileState: { file: fileObj; setFile: React.Dispatch<React.SetStateAction<fileObj | undefined>> }; percentCrop: Crop | undefined }) {
     // Global states
