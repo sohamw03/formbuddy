@@ -79,7 +79,7 @@ export default function Carousel(props: { title: string; folder: string; classNa
       ]);
       toast.success('Copied to clipboard!');
     } catch (error) {
-      toast.error('Failed to copy');
+      toast.error(`Failed to copy. [${error}]`);
       console.error(error);
     }
   };
