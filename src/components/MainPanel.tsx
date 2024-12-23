@@ -43,8 +43,7 @@ export default function MainPanel(props: { page: string }) {
             setInitializing(false);
           });
       } else listFiles().then(() => setInitializing(false));
-    }
-    setInitializing(false);
+    } else setInitializing(false);
   }, [user]);
 
   useEffect(() => {
