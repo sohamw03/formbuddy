@@ -19,10 +19,9 @@ const folderMap: Record<string, string> = {
 export default function MainPanel(props: { page: string }) {
   const { page } = props;
   // Global States
-  const { user, initUserDirective, listFiles, isInitialized, setIsInitialized, setNavigationDisabled } = useGlobal();
+  const { user, initUserDirective, listFiles, isInitialized, setIsInitialized, setNavigationDisabled, initializing, setInitializing } = useGlobal();
   // Local States
   const [isDragging, setIsDragging] = useState(false);
-  const [initializing, setInitializing] = useState(true);
 
   if (page !== "home" && isInitialized === false) {
     redirect("/");
@@ -43,7 +42,7 @@ export default function MainPanel(props: { page: string }) {
             setInitializing(false);
           });
       } else listFiles().then(() => setInitializing(false));
-    } else setInitializing(false);
+    }
   }, [user]);
 
   useEffect(() => {

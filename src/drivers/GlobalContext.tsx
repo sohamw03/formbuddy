@@ -15,6 +15,7 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
   const [openedFileId, setOpenedFileId] = useState("");
   const [currFolder, setCurrFolder] = useState<currFolderType>("home");
   const [isInitialized, setIsInitialized] = useState(false);
+  const [initializing, setInitializing] = useState(true);
   const [navigationDisabled, setNavigationDisabled] = useState(!isInitialized);
   // Refs
   const currImgRef = useRef<HTMLImageElement>(null);
@@ -221,6 +222,8 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
         if (sessionToken) {
           if (sessionToken.error === "RefreshTokenError") login();
           setUser(() => ({ ...sessionToken.user, loggedIn: true }));
+        } else {
+          setInitializing(false);
         }
       } catch (error) {
         console.log(error);
@@ -276,6 +279,8 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
     setIsInitialized,
     navigationDisabled,
     setNavigationDisabled,
+    initializing,
+    setInitializing,
   };
 
   return <globalContext.Provider value={values}>{children}</globalContext.Provider>;
@@ -321,6 +326,8 @@ export interface Values {
   setIsInitialized: React.Dispatch<React.SetStateAction<boolean>>;
   navigationDisabled: boolean;
   setNavigationDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  initializing: boolean;
+  setInitializing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type fileObj = {
