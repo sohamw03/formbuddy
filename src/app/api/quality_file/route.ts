@@ -28,15 +28,16 @@ export async function POST(request: Request) {
           optimizeScans: true,
         })
         .toBuffer();
-      processedArrayBuffer = (processedBuffer.buffer as ArrayBuffer).slice(
-        processedBuffer.byteOffset,
-        processedBuffer.byteOffset + processedBuffer.byteLength
-      );
+      processedArrayBuffer = (processedBuffer.buffer as ArrayBuffer).slice(processedBuffer.byteOffset, processedBuffer.byteOffset + processedBuffer.byteLength);
     }
 
     const headers = new Headers();
     headers.set("Content-Type", contentType);
-    return new Response(processedArrayBuffer, { status: 200, statusText: "OK", headers });
+    return new Response(processedArrayBuffer, {
+      status: 200,
+      statusText: "OK",
+      headers,
+    });
   } catch (error) {
     console.log(error);
     return Response.json({ status: false, message: "Error processing file." }, { status: 500 });

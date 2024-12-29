@@ -25,6 +25,8 @@ export default function Entity() {
   const [numPages, setNumPages] = useState<number>();
 
   const isMobile = useBreakpoint(768); // md breakpoint
+  // 64rem x 90vh
+  const calcImgStyle = resolution.width / resolution.height > (64 * 16) / (document.documentElement.clientHeight * 0.9) ? styles.image : styles.imageVert;
 
   // Get the file to show
   const getFileToShow = () => {
@@ -64,9 +66,6 @@ export default function Entity() {
             <>
               <ModalHeader className={styles.header}>{file.name}</ModalHeader>
               {(() => {
-                // 64rem x 35rem
-                const calcImgStyle = resolution.width / resolution.height > 64 / 35 ? styles.image : styles.imageVert;
-
                 // Existing image handling
                 switch (toolbarMode) {
                   case "normal":
@@ -86,7 +85,7 @@ export default function Entity() {
                       <ModalBody className={styles.modalBody}>
                         {file && (
                           <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
-                            <TransformComponent wrapperStyle={{ cursor: "grab" }}>
+                            <TransformComponent wrapperStyle={{ cursor: "grab" }} wrapperClass={calcImgStyle} contentClass={calcImgStyle}>
                               <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />
                             </TransformComponent>
                           </TransformWrapper>
@@ -94,13 +93,23 @@ export default function Entity() {
                       </ModalBody>
                     );
                   case "crop":
-                    return <CropPlugin isOpen={true} src={file.blobURL} crop={crop} setCrop={setCrop} percentCrop={percentCrop} setPercentCrop={setPercentCrop} calcImgStyle={calcImgStyle} />;
+                    return (
+                      <CropPlugin
+                        isOpen={true}
+                        src={file.blobURL}
+                        crop={crop}
+                        setCrop={setCrop}
+                        percentCrop={percentCrop}
+                        setPercentCrop={setPercentCrop}
+                        calcImgStyle={calcImgStyle}
+                      />
+                    );
                   case "cropped":
                     return (
                       <ModalBody className={styles.modalBody}>
                         {file && (
                           <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
-                            <TransformComponent wrapperStyle={{ cursor: "grab" }}>
+                            <TransformComponent wrapperStyle={{ cursor: "grab" }} wrapperClass={calcImgStyle} contentClass={calcImgStyle}>
                               <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />
                             </TransformComponent>
                           </TransformWrapper>
@@ -124,7 +133,7 @@ export default function Entity() {
                       <ModalBody className={styles.modalBody}>
                         {file && (
                           <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
-                            <TransformComponent wrapperStyle={{ cursor: "grab" }}>
+                            <TransformComponent wrapperStyle={{ cursor: "grab" }} wrapperClass={calcImgStyle} contentClass={calcImgStyle}>
                               <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} />
                             </TransformComponent>
                           </TransformWrapper>
