@@ -4,7 +4,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  output: "export",
   async headers() {
     return [
       {

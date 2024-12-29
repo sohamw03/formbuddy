@@ -130,3 +130,7 @@ export function auth(...args: [GetServerSidePropsContext["req"], GetServerSidePr
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
+
+// export function generateStaticParams() {
+//   return [{ nextauth: ["auth"] }];
+// }

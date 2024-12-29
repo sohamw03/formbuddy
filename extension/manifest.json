@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "Form Buddy",
+    "version": "1.0",
+    "permissions": [
+        "activeTab"
+    ],
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+    }],
+    "action": {
+        "default_popup": "index.html"
+    }
+}
