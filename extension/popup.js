@@ -4,6 +4,14 @@ if ("caches" in window) {
   });
 }
 
+// Single auth check
+chrome.storage.local.get(['sessionToken'], function(result) {
+  if (!result.sessionToken) {
+    window.location.href = 'auth.html';
+    return;
+  }
+});
+
 document.addEventListener("DOMContentLoaded", function () {
   const uploadButton = document.getElementById("uploadButton");
   const fileInput = document.getElementById("fileInput");
@@ -22,10 +30,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
-  if (foundInput)
-    uploadButton.addEventListener("click", function () {
-      fileInput.click(); // Open file selector
-    });
+  uploadButton.addEventListener("click", function () {
+    if (foundInput) fileInput.click(); // Open file selector
+  });
 
   fileInput.addEventListener("change", function (e) {
     const file = e.target.files[0];

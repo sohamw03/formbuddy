@@ -23,12 +23,7 @@ export const authOptions: NextAuthOptions = {
       authorization: { params: { scope: scopes.join(" "), access_type: "offline", prompt: "consent" } },
     }),
   ],
-  pages: {
-    signIn: "/", // The signIn page
-    signOut: "/", // The signOut page
-    error: "/", // Error code passed in query string as ?error=
-    newUser: "/", // If set, new users will be directed here on first sign in
-  },
+  pages: {}, // Remove custom pages to use default NextAuth pages
   callbacks: {
     signIn: async ({ account, profile, credentials }) => {
       const myprofile = profile as any;
@@ -103,6 +98,18 @@ export const authOptions: NextAuthOptions = {
       session.error = token.error;
       return session;
     },
+    redirect({ url, baseUrl }) {
+      // Allow both production and development callback URLs
+      if (
+        url.startsWith(baseUrl) ||
+        url.startsWith('http://127.0.0.1:3000') ||
+        url.startsWith('http://localhost:3000')
+      ) {
+        return url;
+      }
+      // If not allowed, redirect to base URL
+      return baseUrl;
+    }
   },
   session: {
     maxAge: 24 * 60 * 60, // 1 day
@@ -130,7 +137,3 @@ export function auth(...args: [GetServerSidePropsContext["req"], GetServerSidePr
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
-
-// export function generateStaticParams() {
-//   return [{ nextauth: ["auth"] }];
-// }
