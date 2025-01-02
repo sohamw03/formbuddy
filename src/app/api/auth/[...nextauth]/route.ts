@@ -98,18 +98,6 @@ export const authOptions: NextAuthOptions = {
       session.error = token.error;
       return session;
     },
-    redirect({ url, baseUrl }) {
-      // Allow both production and development callback URLs
-      if (
-        url.startsWith(baseUrl) ||
-        url.startsWith('http://127.0.0.1:3000') ||
-        url.startsWith('http://localhost:3000')
-      ) {
-        return url;
-      }
-      // If not allowed, redirect to base URL
-      return baseUrl;
-    }
   },
   session: {
     maxAge: 24 * 60 * 60, // 1 day
