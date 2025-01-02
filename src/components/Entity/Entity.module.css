@@ -7,11 +7,13 @@
 
 .image {
   @apply !w-full;
+  height: max-content !important;
   max-height: var(--modal-height)!important;
 }
 
 .imageVert {
   @apply !h-full;
+  width: max-content !important;
   max-height: var(--modal-height)!important;
 }
 

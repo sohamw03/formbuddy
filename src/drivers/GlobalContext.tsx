@@ -73,16 +73,18 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
       });
       const responseJson = await response.json();
       let filesLocal = (await Promise.all(
-        responseJson.files.map(async (file: fileObj) => ({
-          name: file.name,
-          id: file.id,
-          mimeType: file.mimeType,
-          parents: file.parents,
-          thumbnailLink: file.thumbnailLink,
-          blobURL: `${file.mimeType.includes("image") || file.mimeType === "application/pdf" ? await downFile(file.id) : ""}`,
-          resolutionVariants: file.resolutionVariants,
-          qualityVariants: file.qualityVariants,
-        }))
+        responseJson.files.map(async (file: fileObj) => {
+          return {
+            name: file.name,
+            id: file.id,
+            mimeType: file.mimeType,
+            parents: file.parents,
+            thumbnailLink: file.thumbnailLink,
+            blobURL: `${file.mimeType.includes("image") || file.mimeType === "application/pdf" ? await downFile(file.id) : ""}`,
+            resolutionVariants: file.resolutionVariants,
+            qualityVariants: file.qualityVariants,
+          };
+        }),
       )) as fileObj[];
 
       // Create a tree structure for the files
@@ -108,8 +110,11 @@ export function GlobalContextProvider({ children }: { children: React.ReactNode 
 
   // Download file
   const downFile = async (id: string): Promise<string | undefined> => {
-    const existingFile = files.find((file) => file.id === id || file.resolutionVariants.includes(id) || file.qualityVariants.includes(id));
-    if (existingFile?.blobURL) return existingFile.blobURL;
+    const existingFile = files.find((file) => file.id === id);
+    if (existingFile && existingFile.blobURL.length > 0) return existingFile.blobURL;
+    const existingFileChild = Array.from(files.map((file) => file.children || []).flat()).find((file) => file.id === id);
+    if (existingFileChild && existingFileChild.blobURL.length > 0) return existingFileChild.blobURL;
+
     try {
       const response = await fetch("/api/down_file", {
         method: "POST",

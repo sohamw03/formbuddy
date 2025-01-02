@@ -2,7 +2,7 @@
 import { fileObj, useGlobal } from "@/drivers/GlobalContext";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type Crop } from "react-image-crop";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -23,10 +23,23 @@ export default function Entity() {
   const [crop, setCrop] = useState<Crop>();
   const [percentCrop, setPercentCrop] = useState<Crop>();
   const [numPages, setNumPages] = useState<number>();
+  // Local states
+  const [file, setFile] = useState<fileObj | undefined>();
+  const [imgStyle, setImgStyle] = useState<string>("");
 
   const isMobile = useBreakpoint(768); // md breakpoint
-  // 64rem x 90vh
-  const calcImgStyle = resolution.width / resolution.height > (64 * 16) / (document.documentElement.clientHeight * 0.9) ? styles.image : styles.imageVert;
+
+  const modalBodyRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const calculateImgStyle = () => {
+      const { width: mbwidth, height: mbheight } = modalBodyRef.current?.getBoundingClientRect() || { width: 0, height: 0 };
+      return resolution.width / resolution.height > mbwidth / mbheight ? styles.image : styles.imageVert;
+    };
+
+    // if (modalBodyRef.current && resolution.width && resolution.height) {
+    setImgStyle(calculateImgStyle());
+    // }
+  }, [modalBodyRef.current, resolution]);
 
   // Get the file to show
   const getFileToShow = () => {
@@ -43,7 +56,6 @@ export default function Entity() {
     }
     return fileToShow;
   };
-  const [file, setFile] = useState<fileObj | undefined>();
   useEffect(() => {
     setFile(getFileToShow());
   }, [openedFileId, files]);
@@ -54,11 +66,12 @@ export default function Entity() {
     if (currImgRef?.current) setResolution({ width: currImgRef.current.naturalWidth, height: currImgRef.current.naturalHeight });
   };
 
+  // Function to handle document load success
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
   }
 
-  if (file)
+  if (file && imgStyle)
     return (
       <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange} size={isMobile ? "full" : "5xl"} scrollBehavior="inside" backdrop="blur">
         <ModalContent className="relative">
@@ -72,7 +85,7 @@ export default function Entity() {
                     // Check if file is PDF
                     if (file.mimeType === "application/pdf") {
                       return (
-                        <ModalBody className={styles.modalBody}>
+                        <ModalBody className={styles.modalBody} ref={modalBodyRef}>
                           <Document file={file.blobURL} onLoadSuccess={onDocumentLoadSuccess} className={styles.pdfDocument}>
                             {Array.from(new Array(numPages), (_, index) => (
                               <Page key={`page_${index + 1}`} pageNumber={index + 1} className={styles.pdfPage} renderTextLayer={false} />
@@ -82,11 +95,11 @@ export default function Entity() {
                       );
                     }
                     return (
-                      <ModalBody className={styles.modalBody}>
+                      <ModalBody className={styles.modalBody} ref={modalBodyRef}>
                         {file && (
                           <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
-                            <TransformComponent wrapperStyle={{ cursor: "grab" }} wrapperClass={calcImgStyle} contentClass={calcImgStyle}>
-                              <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />
+                            <TransformComponent wrapperStyle={{ cursor: "grab" }} wrapperClass={imgStyle} contentClass={imgStyle}>
+                              <img src={file.blobURL} alt={file.name} className={imgStyle} ref={currImgRef} onLoad={extractResolution} />
                             </TransformComponent>
                           </TransformWrapper>
                         )}
@@ -101,16 +114,17 @@ export default function Entity() {
                         setCrop={setCrop}
                         percentCrop={percentCrop}
                         setPercentCrop={setPercentCrop}
-                        calcImgStyle={calcImgStyle}
+                        calcImgStyle={imgStyle}
+                        ref={modalBodyRef}
                       />
                     );
                   case "cropped":
                     return (
-                      <ModalBody className={styles.modalBody}>
+                      <ModalBody className={styles.modalBody} ref={modalBodyRef}>
                         {file && (
                           <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
-                            <TransformComponent wrapperStyle={{ cursor: "grab" }} wrapperClass={calcImgStyle} contentClass={calcImgStyle}>
-                              <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} onLoad={extractResolution} />
+                            <TransformComponent wrapperStyle={{ cursor: "grab" }} wrapperClass={imgStyle} contentClass={imgStyle}>
+                              <img src={file.blobURL} alt={file.name} className={imgStyle} ref={currImgRef} onLoad={extractResolution} />
                             </TransformComponent>
                           </TransformWrapper>
                         )}
@@ -120,7 +134,7 @@ export default function Entity() {
                     // Check if file is PDF
                     if (file.mimeType === "application/pdf") {
                       return (
-                        <ModalBody className={styles.modalBody}>
+                        <ModalBody className={styles.modalBody} ref={modalBodyRef}>
                           <Document file={file.blobURL} onLoadSuccess={onDocumentLoadSuccess} className={styles.pdfDocument}>
                             {Array.from(new Array(numPages), (_, index) => (
                               <Page key={`page_${index + 1}`} pageNumber={index + 1} className={styles.pdfPage} renderTextLayer={false} />
@@ -130,11 +144,11 @@ export default function Entity() {
                       );
                     }
                     return (
-                      <ModalBody className={styles.modalBody}>
+                      <ModalBody className={styles.modalBody} ref={modalBodyRef}>
                         {file && (
                           <TransformWrapper smooth={true} doubleClick={{ mode: "toggle" }}>
-                            <TransformComponent wrapperStyle={{ cursor: "grab" }} wrapperClass={calcImgStyle} contentClass={calcImgStyle}>
-                              <img src={file.blobURL} alt={file.name} className={calcImgStyle} ref={currImgRef} />
+                            <TransformComponent wrapperStyle={{ cursor: "grab" }} wrapperClass={imgStyle} contentClass={imgStyle}>
+                              <img src={file.blobURL} alt={file.name} className={imgStyle} ref={currImgRef} />
                             </TransformComponent>
                           </TransformWrapper>
                         )}
