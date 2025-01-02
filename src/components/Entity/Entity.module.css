@@ -1,72 +1,72 @@
 .modalBody {
-  @apply grid place-items-center w-full p-0 m-0 relative rounded-lg;
-  @apply flex-none backdrop-brightness-[40%];
-  height: var(--modal-height);
-  overflow-y: auto;
+    @apply grid place-items-center w-full p-0 m-0 relative rounded-lg;
+    @apply flex-none backdrop-brightness-[40%];
+    height: var(--modal-height);
+    overflow-y: auto;
 }
 
 .image {
-  @apply !w-full;
-  height: max-content !important;
-  max-height: var(--modal-height)!important;
+    @apply !w-full;
+    height: max-content !important;
+    max-height: var(--modal-height) !important;
 }
 
 .imageVert {
-  @apply !h-full;
-  width: max-content !important;
-  max-height: var(--modal-height)!important;
+    @apply !h-full;
+    width: max-content !important;
+    max-height: var(--modal-height) !important;
 }
 
 .header {
-  @apply text-sm font-normal;
-  @apply p-2.5;
+    @apply text-sm font-normal;
+    @apply p-2.5;
 }
 
 .pdfDocument {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
 }
 
 .pdfPage {
-  max-width: 100%;
-  height: auto !important;
+    max-width: 100%;
+    height: auto !important;
 }
 
 .pdfPage > canvas {
-  max-width: 100%;
-  height: auto !important;
+    max-width: 100%;
+    height: auto !important;
 }
 
 .pdfControls {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
-  padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 0.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 0.5rem;
 }
 
 .pdfControls button {
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.25rem;
-  background: white;
-  border: 1px solid #ddd;
-  cursor: pointer;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    background: white;
+    border: 1px solid #ddd;
+    cursor: pointer;
 }
 
 .pdfControls button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
-  .modalBody {
-    height: 100vh;
-    height: 100svh;
-  }
+    .modalBody {
+        height: calc(100vh - 40px);
+        height: calc(100svh - 40px);
+    }
 }
