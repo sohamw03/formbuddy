@@ -1,5 +1,5 @@
 .modalBody {
-  @apply grid place-items-center w-full p-0 m-0 relative;
+  @apply grid place-items-center w-full p-0 m-0 relative rounded-lg;
   @apply flex-none backdrop-brightness-[40%];
   height: var(--modal-height);
   overflow-y: auto;

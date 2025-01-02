@@ -86,6 +86,8 @@ export default function Carousel(props: { title: string; folder: string; classNa
       <div className={`${styles.cardWrapper} ${className || ""}`}>
         {filesToShow.map((file) => {
           const fileVariant = (file.children?.find((f) => f.id === selectedVariants[file.id]) as fileObj) || file;
+          const resolutionVariants = file.children?.filter((c) => c.name.includes("_r_")) || [];
+          const qualityVariants = file.children?.filter((c) => c.name.includes("_q_")) || [];
           return (
             <div key={file.id} className="relative">
               <Button
@@ -93,7 +95,8 @@ export default function Carousel(props: { title: string; folder: string; classNa
                 className={styles.copyBtn}
                 onPress={(e) => {
                   handleCopy(fileVariant);
-                }}>
+                }}
+              >
                 <img className={styles.nonInteractive} src="/icons/copy_icon.svg" alt="copy" />
               </Button>
               <Card
@@ -105,14 +108,30 @@ export default function Carousel(props: { title: string; folder: string; classNa
                   setToolbarMode("normal");
                   onOpen();
                 }}
-                className={styles.card}>
-                <CardBody className={styles.cardBody}>{fileVariant.mimeType === "application/pdf" ? <PDFThumbnail file={fileVariant} /> : <Image shadow="sm" radius="lg" width="100%" alt={fileVariant.name} className={`${styles.image} pointer-events-none`} src={fileVariant.thumbnailLink} />}</CardBody>
+                className={styles.card}
+              >
+                <CardBody className={styles.cardBody}>
+                  {fileVariant.mimeType === "application/pdf" ? (
+                    <PDFThumbnail file={fileVariant} />
+                  ) : (
+                    <Image
+                      shadow="sm"
+                      radius="lg"
+                      width="100%"
+                      alt={fileVariant.name}
+                      className={`${styles.image} pointer-events-none`}
+                      src={fileVariant.thumbnailLink}
+                    />
+                  )}
+                </CardBody>
                 <CardFooter className={styles.cardFooter}>
                   <abbr title={fileVariant.name} className="whitespace-nowrap overflow-hidden no-underline">
                     <b>{fileVariant.name}</b>
                   </abbr>
                 </CardFooter>
               </Card>
+
+              {/* Dropdown */}
               <Dropdown placement="bottom-start">
                 <DropdownTrigger>
                   <Button variant="shadow" className={styles.dropDownBtn}>
@@ -135,32 +154,45 @@ export default function Carousel(props: { title: string; folder: string; classNa
                         ...prev,
                         [file.id]: variantId,
                       }));
+                    } else if (keyStr === "download") {
+                      const a = document.createElement("a");
+                      a.href = fileVariant.blobURL;
+                      a.download = fileVariant.name;
+                      a.click();
                     }
-                  }}>
-                  <DropdownSection title={undefined}>
-                    <DropdownItem key={`variant_${file.id}`} className={selectedVariants[file.id] === file.id ? "text-primary-300" : ""}>
-                      Original
-                    </DropdownItem>
-                  </DropdownSection>
-                  <DropdownSection title="Resolution Variants" items={file.children?.filter((c) => c.name.includes("_r_")) || []}>
-                    {(variant) => (
-                      <DropdownItem key={`variant_${variant.id}`} className={selectedVariants[file.id] === variant.id ? "text-primary-300" : ""}>
-                        {getResolution(variant.name)}
-                      </DropdownItem>
-                    )}
-                  </DropdownSection>
-                  <DropdownSection title="Quality Variants" items={file.children?.filter((c) => c.name.includes("_q_")) || []}>
-                    {(variant) => (
-                      <DropdownItem key={`variant_${variant.id}`} className={selectedVariants[file.id] === variant.id ? "text-primary-300" : ""}>
-                        {getQuality(variant.name)}
-                      </DropdownItem>
-                    )}
-                  </DropdownSection>
-                  <DropdownSection title={undefined}>
-                    <DropdownItem key="delete" className="text-danger" color="danger">
-                      Delete file
-                    </DropdownItem>
-                  </DropdownSection>
+                  }}
+                >
+                  <DropdownItem key="download" startContent={<Image src="/icons/download_icon.svg" alt="Photos" width={20} height={20} />}>
+                    Download
+                  </DropdownItem>
+                  <DropdownItem
+                    key={`variant_${file.id}`}
+                    className={selectedVariants[file.id] === file.id ? "text-primary-300" : ""}
+                    showDivider={!resolutionVariants.length && !qualityVariants.length}
+                  >
+                    Original
+                  </DropdownItem>
+                  {!!resolutionVariants.length ? (
+                    <DropdownSection title="Resolution Variants" items={resolutionVariants} showDivider={!qualityVariants.length}>
+                      {(variant) => (
+                        <DropdownItem key={`variant_${variant.id}`} className={selectedVariants[file.id] === variant.id ? "text-primary-300" : ""}>
+                          {getResolution(variant.name)}
+                        </DropdownItem>
+                      )}
+                    </DropdownSection>
+                  ) : null}
+                  {!!qualityVariants.length ? (
+                    <DropdownSection title="Quality Variants" items={qualityVariants} showDivider>
+                      {(variant) => (
+                        <DropdownItem key={`variant_${variant.id}`} className={selectedVariants[file.id] === variant.id ? "text-primary-300" : ""}>
+                          {getQuality(variant.name)}
+                        </DropdownItem>
+                      )}
+                    </DropdownSection>
+                  ) : null}
+                  <DropdownItem key="delete" className="text-danger" color="danger">
+                    Delete file
+                  </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
