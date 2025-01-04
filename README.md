@@ -50,7 +50,7 @@ FormBuddy is a modern web application that helps you manage, modify, and store v
 
 2. Install dependencies:
    ```bash
-   npm install
+   bun install
    ```
 
 3. Set up environment variables:
@@ -66,7 +66,7 @@ FormBuddy is a modern web application that helps you manage, modify, and store v
 
 4. Run the development server:
    ```bash
-   npm run dev
+   bun dev
    ```
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
